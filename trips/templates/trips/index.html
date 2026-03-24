@@ -11,15 +11,22 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm border-0">
                     <div class="card-body">
-                        <h5>{{ trip.title }}</h5>
+                        <h5>
+                            <a href="/trips/{{ trip.id }}/">
+                               {{ trip.title }}
+                            </a>
+                        </h5>
                         <p>{{ trip.location }}</p>
                         <p><strong>{{ trip.price }} zł</strong></p>
                     </div>
                 </div>
             </div>
+        {% empty %}
+            <p>No trips available</p>
         {% endfor %}
     </div>
 
 </div>
 
 {% endblock %}
+
