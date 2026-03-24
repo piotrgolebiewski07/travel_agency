@@ -1,0 +1,8 @@
+<h1>Trips</h1>
+
+{% for trip in trips %}
+    <p>{{ trip.title }} - {{ trip.price }}</p>
+{% empty %}
+    <p>No trips available</p>
+{% endfor %}
+
