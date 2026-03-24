@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2 class="mb-4 text-center">Upcoming trips</h2>
+
+    <div class="row">
+        {% for trip in trips %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ trip.title }}</h5>
+                        <p class="text-muted">{{ trip.location }}</p>
+                        <p><strong>{{ trip.price }} zł</strong></p>
+                        <p class="small">
+                            {{ trip.start_date }} → {{ trip.end_date }}
+                        </p>
+                        <a href="/trips/{{ trip.id }}" class="btn btn-outline-primary btn-sm">
+                            View details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'index' %}" class="btn btn-primary btn-lg">
+            See all trips
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}
+

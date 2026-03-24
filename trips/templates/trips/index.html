@@ -1,8 +1,25 @@
-<h1>Trips</h1>
+{% extends "base.html" %}
 
-{% for trip in trips %}
-    <p>{{ trip.title }} - {{ trip.price }}</p>
-{% empty %}
-    <p>No trips available</p>
-{% endfor %}
+{% block content %}
 
+<div class="container">
+
+    <h2 class="mb-4 text-center">All trips</h2>
+
+    <div class="row">
+        {% for trip in trips %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-body">
+                        <h5>{{ trip.title }}</h5>
+                        <p>{{ trip.location }}</p>
+                        <p><strong>{{ trip.price }} zł</strong></p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

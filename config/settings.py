@@ -55,7 +55,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],   # globalne szablony (np. home.html, base.html)
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
