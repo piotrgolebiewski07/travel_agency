@@ -6,11 +6,26 @@
 
     <h2 class="mb-4">{{ trip.title }}</h2>
 
-    <p><strong>Location</strong> {{ trip.location }}</p>
-    <p><strong>Price</strong> {{ trip.price }}</p>
-    <p><strong>Dates</strong> {{ trip.start_date }} -> {{ trip.end_date }}</p>
-
+    <p><strong>Location:</strong> {{ trip.location }}</p>
+    <p><strong>Price:</strong> {{ trip.price }}</p>
+    <p><strong>Dates:</strong> {{ trip.start_date }} -> {{ trip.end_date }}</p>
+    <p><strong>Number of vacancies:</strong> {{ trip.max_people }}</p>
+    <p><strong>Available:</strong>
+        {% if trip.available %}
+            <span class="text-success">Yes</span>
+        {% else %}
+            <span class="text-danger">No</span>
+        {% endif %}
+    </p>
     <p class="mt-3">{{ trip.description }}</p>
+
+    {% if trip.available %}
+        <a href="{% url 'index' %}" class="btn btn-primary mt-3">
+            Book trip
+        </a>
+    {% else %}
+        <p class ="text-danger mt-3">Trip not available for booking.</p>
+    {% endif %}
 
     <a href="{% url 'index' %}" class="btn btn-secondary mt-3">
         Back to trips
