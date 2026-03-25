@@ -9,19 +9,18 @@
     <div class="row">
         {% for trip in trips %}
             <div class="col-md-4">
-                <div class="card mb-4 shadow-sm border-0">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ trip.title }}</h5>
-                        <p class="text-muted">{{ trip.location }}</p>
-                        <p><strong>{{ trip.price }} {{ trip.get_currency_symbol }}</strong></p>
-                        <p class="small">
-                            {{ trip.start_date }} → {{ trip.end_date }}
-                        </p>
-                        <a href="/trips/{{ trip.id }}/" class="btn btn-outline-primary btn-sm">
-                            View details
-                        </a>
+                <a href="{% url 'detail' trip.id %}" style="text_decoration: none; color: inherit;">
+                    <div class="card mb-4 shadow-sm border-0">
+                        <div class="card-body">
+                            <h5>{{ trip.title }}</h5>
+                            <p class="text-muted">{{ trip.location }}</p>
+                            <p><strong>{{ trip.price }} {{ trip.get_currency_symbol }}</strong></p>
+                            <p class="small">
+                                {{ trip.start_date }} → {{ trip.end_date }}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         {% endfor %}
     </div>

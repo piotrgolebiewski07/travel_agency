@@ -3,7 +3,7 @@ from django.db import models
 
 class Trip(models.Model):
     title = models.CharField(max_length=100)
-    description = models.TextField(max_length=200)
+    description = models.TextField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     currency = models.CharField(max_length=3, default="EUR")
     start_date = models.DateField()
