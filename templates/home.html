@@ -13,7 +13,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ trip.title }}</h5>
                         <p class="text-muted">{{ trip.location }}</p>
-                        <p><strong>{{ trip.price }} zł</strong></p>
+                        <p><strong>{{ trip.price }} {{ trip.get_currency_symbol }}</strong></p>
                         <p class="small">
                             {{ trip.start_date }} → {{ trip.end_date }}
                         </p>
