@@ -31,7 +31,7 @@ def index(request):
 @api_view(["GET", "POST"])
 def api_trips(request):
     if request.method == "GET":
-        trips = Trip.objects.all()
+        trips = Trip.objects.all().order_by("start_date")
         serializer = TripSerializer(trips, many=True)
         return Response(serializer.data)
     elif request.method == "POST":
@@ -42,9 +42,29 @@ def api_trips(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET"])
+@api_view(["GET", "PUT", "PATCH", "DELETE"])
 def api_trip_detail(request, pk):
     trip = get_object_or_404(Trip, pk=pk)
-    serializer = TripSerializer(trip)
-    return Response(serializer.data)
+
+    if request.method == "GET":
+        serializer = TripSerializer(trip)
+        return Response(serializer.data)
+
+    elif request.method == "PUT":
+        serializer = TripSerializer(trip, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == "PATCH":
+        serializer = TripSerializer(trip, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == "DELETE":
+        trip.delete()
+        return Response(status=204)
 
