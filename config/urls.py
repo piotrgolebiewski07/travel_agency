@@ -21,6 +21,7 @@ from trips import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('trips/', include('trips.urls'))
+    path('trips/', include('trips.urls')),
+    path('api/', include('trips.api_urls'))
 ]
 
