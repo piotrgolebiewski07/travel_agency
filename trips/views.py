@@ -4,13 +4,16 @@
 from django.shortcuts import render, get_object_or_404
 
 # 3. Third-party (DRF)
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.viewsets import ModelViewSet
 
 # 4. Local imports
 from .models import Trip
 from .serializers import TripSerializer
+
+
+class TripViewSet(ModelViewSet):
+    queryset = Trip.objects.all()
+    serializer_class = TripSerializer
 
 
 def trip_detail(request, pk):
@@ -28,43 +31,4 @@ def index(request):
     return render(request, "trips/index.html", {"trips": trips})  # przekazuje dane do template
 
 
-@api_view(["GET", "POST"])
-def api_trips(request):
-    if request.method == "GET":
-        trips = Trip.objects.all().order_by("start_date")
-        serializer = TripSerializer(trips, many=True)
-        return Response(serializer.data)
-    elif request.method == "POST":
-        serializer = TripSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(["GET", "PUT", "PATCH", "DELETE"])
-def api_trip_detail(request, pk):
-    trip = get_object_or_404(Trip, pk=pk)
-
-    if request.method == "GET":
-        serializer = TripSerializer(trip)
-        return Response(serializer.data)
-
-    elif request.method == "PUT":
-        serializer = TripSerializer(trip, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == "PATCH":
-        serializer = TripSerializer(trip, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == "DELETE":
-        trip.delete()
-        return Response(status=204)
 
