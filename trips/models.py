@@ -21,3 +21,11 @@ class Trip(models.Model):
         if self.currency == "PLN":
             return "zł"
 
+
+class TripImage(models.Model):
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)  # delete images when Trip is deleted
+    image = models.ImageField(upload_to="trips/")
+
+    def __str__(self):
+        return f"Image for {self.trip.title}"
+

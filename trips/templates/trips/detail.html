@@ -7,6 +7,9 @@
         <div class="col-md-8">
             <div class="card shadow-lg border-0 p-4">
                 <h2 class="mb-1">{{ trip.title }}</h2>
+                {% for image in trip.tripimage_set.all %}
+                    <img src="{{ image.image.url }}" width="400">
+                {% endfor %}
                 <p class="text-muted">{{ trip.location }}</p>
                 <p class="mb-2"><strong>Price:</strong> {{ trip.price }} {{ trip.get_currency_symbol }}</p>
                 <p class="mb-2"> <strong>Dates:</strong> {{ trip.start_date }} → {{ trip.end_date }}</p>

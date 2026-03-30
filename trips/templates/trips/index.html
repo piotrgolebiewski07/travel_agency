@@ -18,6 +18,9 @@
                             <p class="small">
                                 {{ trip.start_date }} → {{ trip.end_date }}
                             </p>
+                            {% if trip.tripimage_set.first %}
+                                <img src="{{ trip.tripimage_set.first.image.url }}" width="200">
+                            {% endif %}
                         </div>
                     </div>
                 </a>
