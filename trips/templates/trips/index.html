@@ -12,15 +12,18 @@
                 <a href="{% url 'detail' trip.id %}" style="text-decoration: none; color= inherit;">
                     <div class="card mb-4 shadow-sm border-0">
                         <div class="card-body">
-                            <h5>{{ trip.title }}</h5>
+                            <h3>{{ trip.title }}</h3>
                             <p class="text-muted">{{ trip.location }}</p>
                             <p><strong>{{ trip.price }} {{trip.get_currency_symbol }} </strong></p>
                             <p class="small">
                                 {{ trip.start_date }} → {{ trip.end_date }}
                             </p>
-                            {% if trip.tripimage_set.first %}
-                                <img src="{{ trip.tripimage_set.first.image.url }}" width="200">
-                            {% endif %}
+
+                            {% for image in trip.tripimage_set.all %}
+                                {% if image.is_main %}
+                                    <img src="{{ image.image.url }}" width="200" style="object-fit:cover;">
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </a>

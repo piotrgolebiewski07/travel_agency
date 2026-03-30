@@ -21,11 +21,11 @@
                                 </p>
                             </div>
 
-                            {% if trip.tripimage_set.first %}
-                                <img src="{{ trip.tripimage_set.first.image.url }}"
-                                     style="width:175px; height:250px; object-fit:cover;">
-                            {% endif %}
-
+                            {% for image in trip.tripimage_set.all %}
+                                {% if image.is_main %}
+                                    <img src="{{ image.image.url }}" style="width:175px; height:250px; object-fit:cover;">
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </a>

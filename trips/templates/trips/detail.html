@@ -7,9 +7,16 @@
         <div class="col-md-8">
             <div class="card shadow-lg border-0 p-4">
                 <h2 class="mb-1">{{ trip.title }}</h2>
+
                 {% for image in trip.tripimage_set.all %}
-                    <img src="{{ image.image.url }}" width="400">
+                    {% if image.is_main %}
+                        <a href="{{ image.image.url }}" data-lightbox="trip-gallery">
+                            <img src="{{ image.image.url }}"
+                                 style="width:100%; height:250px; object-fit:cover; margin-bottom:15px;">
+                        </a>
+                    {% endif %}
                 {% endfor %}
+
                 <p class="text-muted">{{ trip.location }}</p>
                 <p class="mb-2"><strong>Price:</strong> {{ trip.price }} {{ trip.get_currency_symbol }}</p>
                 <p class="mb-2"> <strong>Dates:</strong> {{ trip.start_date }} → {{ trip.end_date }}</p>
@@ -34,6 +41,18 @@
                         <span class ="text-danger mt-3">Booking unavailable.</span>
                     {% endif %}
                 </div>
+
+                <div>
+                    {% for image in trip.tripimage_set.all %}
+                        {% if not image.is_main %}
+                            <a href="{{ image.image.url }}" data-lightbox="trip-gallery">
+                                <img src="{{ image.image.url }}"
+                                     style="width:120px; height:80px; object-fit:cover; margin:5px;">
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
             </div>
         </div>
     </div>

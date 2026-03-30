@@ -25,6 +25,7 @@ class Trip(models.Model):
 class TripImage(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)  # delete images when Trip is deleted
     image = models.ImageField(upload_to="trips/")
+    is_main = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Image for {self.trip.title}"
