@@ -3,43 +3,39 @@
 {% block content %}
 
 <div class="container">
-
     <h2 class="mb-4 text-center">All trips</h2>
-
-    <div class="row">
-        {% for trip in trips %}
+        <div class="row">
+            {% for trip in trips %}
             <div class="col-md-4">
-                <a href="{% url 'detail' trip.id %}" style="text-decoration: none; color= inherit;">
-                    <div class="card mb-4 shadow-sm border-0">
+                <a href="{% url 'detail' trip.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="card mb-4 border-0 trip-card">
                         <div class="card-body">
                             <h3>{{ trip.title }}</h3>
-                            <p class="text-muted">{{ trip.location }}</p>
-                            <p><strong>{{ trip.price }} {{trip.get_currency_symbol }} </strong></p>
-                            <p class="small">
-                                {{ trip.start_date }} → {{ trip.end_date }}
-                            </p>
+                            <p class="text-muted mb-4">{{ trip.location }}</p>
 
-                            {% for image in trip.tripimage_set.all %}
-                                {% if image.is_main %}
-                                    <img src="{{ image.image.url }}" width="200" style="object-fit:cover;">
+                            <p><strong>{{ trip.price }} {{ trip.get_currency_symbol }} </strong></p>
+                            <p class="small"> {{ trip.start_date }} → {{ trip.end_date }} </p>
+
+                            {% with trip.images.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.image.url }}" class="card-img-top" style="height:220px; object-fit:cover;">
+                                {% else %}
+                                    <img src="https://via.placeholder.com/400x250" class="card-img-top">
                                 {% endif %}
-                            {% endfor %}
+                            {% endwith %}
                         </div>
                     </div>
                 </a>
             </div>
-        {% empty %}
+            {% empty %}
             <div class="col-12 text-center">
                 <p>No trips available</p>
             </div>
-        {% endfor %}
-    </div>
-
+            {% endfor %}
+        </div>
 </div>
+
 <div class="text-center mt-3">
-    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
-        Back Home
-    </a>
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary"> Back Home </a>
 </div>
 {% endblock %}
-

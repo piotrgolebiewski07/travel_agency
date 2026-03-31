@@ -23,7 +23,7 @@ class Trip(models.Model):
 
 
 class TripImage(models.Model):
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)  # delete images when Trip is deleted
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="images")  # delete images when Trip is deleted
     image = models.ImageField(upload_to="trips/")
     is_main = models.BooleanField(default=False)
 

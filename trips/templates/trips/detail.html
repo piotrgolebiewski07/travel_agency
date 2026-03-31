@@ -8,7 +8,7 @@
             <div class="card shadow-lg border-0 p-4">
                 <h2 class="mb-1">{{ trip.title }}</h2>
 
-                {% for image in trip.tripimage_set.all %}
+                {% for image in trip.images.all %}
                     {% if image.is_main %}
                         <a href="{{ image.image.url }}" data-lightbox="trip-gallery">
                             <img src="{{ image.image.url }}"
@@ -43,7 +43,7 @@
                 </div>
 
                 <div>
-                    {% for image in trip.tripimage_set.all %}
+                    {% for image in trip.images.all %}
                         {% if not image.is_main %}
                             <a href="{{ image.image.url }}" data-lightbox="trip-gallery">
                                 <img src="{{ image.image.url }}"

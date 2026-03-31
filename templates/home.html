@@ -9,25 +9,26 @@
     <div class="row">
         {% for trip in trips %}
             <div class="col-md-4">
-                <a href="{% url 'detail' trip.id %}" style="text_decoration: none; color: inherit;">
-                    <div class="card mb-4 shadow-sm border-0">
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5>{{ trip.title }}</h5>
-                                <p class="text-muted">{{ trip.location }}</p>
-                                <p><strong>{{ trip.price }} {{ trip.get_currency_symbol }}</strong></p>
-                                <p class="small">
-                                    {{ trip.start_date }} → {{ trip.end_date }}
-                                </p>
-                            </div>
+                <a href="{% url 'detail' trip.id %}" style="text-decoration: none; color: inherit;">
 
-                            {% for image in trip.tripimage_set.all %}
-                                {% if image.is_main %}
-                                    <img src="{{ image.image.url }}" style="width:175px; height:250px; object-fit:cover;">
-                                {% endif %}
-                            {% endfor %}
+                    {% with trip.images.first as img %}
+                    <div class="card trip-card text-white"
+                         style="height: 300px;
+                                background-size: cover;
+                                background-position: center;
+                                background-image: url('{% if img %}{{ img.image.url }}{% else %}https://via.placeholder.com/400x300{% endif %}');">
+
+                        <div class="card-img-overlay d-flex flex-column justify-content-end"
+                             style="background: rgba(0,0,0,0.4);">
+
+                            <h4>{{ trip.title }}</h4>
+                            <p class="mb-1">{{ trip.location }}</p>
+                            <strong>{{ trip.price }} {{ trip.get_currency_symbol }}</strong>
+
                         </div>
                     </div>
+                    {% endwith %}
+
                 </a>
             </div>
         {% endfor %}

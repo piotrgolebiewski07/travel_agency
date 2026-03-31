@@ -121,3 +121,4 @@ STATIC_URL = 'static/'
 # media (uploaded images)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "MEDIA"
+STATICFILES_DIRS = [BASE_DIR / "static"]
