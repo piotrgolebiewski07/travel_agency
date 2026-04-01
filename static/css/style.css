@@ -10,3 +10,28 @@
 .trip-card:hover {
     transform: scale(1.1);
 }
+
+.trip-title {
+    text-align: center;
+}
+
+.text-price {
+    color: #2a5d9f;   /* ciemny niebieski */
+}
+
+.btn-book {
+    padding: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-book:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.position-sticky {
+    top: 20px;
+}
+

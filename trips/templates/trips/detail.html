@@ -3,58 +3,75 @@
 {% block content %}
 
 <div class="container mt-4">
-    <div class="row justify-content-center">
+    <div class="row">
+
+        <!-- LEWA -->
         <div class="col-md-8">
             <div class="card shadow-lg border-0 p-4">
-                <h2 class="mb-1">{{ trip.title }}</h2>
 
-                {% for image in trip.images.all %}
-                    {% if image.is_main %}
-                        <a href="{{ image.image.url }}" data-lightbox="trip-gallery">
-                            <img src="{{ image.image.url }}"
-                                 style="width:100%; height:250px; object-fit:cover; margin-bottom:15px;">
+                <h2 class="mb-3 trip-title">{{ trip.title }}</h2>
+
+                {% for img in trip.images.all %}
+                    {% if forloop.first %}
+                        <a href="{{ img.image.url }}" data-lightbox="trip-gallery">
+                            <img src="{{ img.image.url }}"
+                                 style="width:100%; height:400px; object-fit:cover; margin-bottom:15px;">
                         </a>
                     {% endif %}
                 {% endfor %}
 
-                <p class="text-muted">{{ trip.location }}</p>
-                <p class="mb-2"><strong>Price:</strong> {{ trip.price }} {{ trip.get_currency_symbol }}</p>
-                <p class="mb-2"> <strong>Dates:</strong> {{ trip.start_date }} → {{ trip.end_date }}</p>
-                <p class="mb-2"><strong>Max people:</strong> {{ trip.max_people }}</p>
-                <p class="mb-2"><strong>Status:</strong>
-                    {% if trip.available %}
-                        <span class="badge bg-success">Available</span>
-                    {% else %}
-                        <span class="badge bg-danger">Not available</span>
-                    {% endif %}
-                </p>
-                <hr class="my-4">
-
-                <p class="mt-3">{{ trip.description }}</p>
-
-                <div class="mt-4">
-                    {% if trip.available %}
-                        <a href="{% url 'index' %}" class="btn btn-primary">
-                            Book trip
-                        </a>
-                    {% else %}
-                        <span class ="text-danger mt-3">Booking unavailable.</span>
-                    {% endif %}
-                </div>
-
-                <div>
-                    {% for image in trip.images.all %}
-                        {% if not image.is_main %}
-                            <a href="{{ image.image.url }}" data-lightbox="trip-gallery">
-                                <img src="{{ image.image.url }}"
-                                     style="width:120px; height:80px; object-fit:cover; margin:5px;">
+                <div class="mt-2">
+                    {% for img in trip.images.all %}
+                        {% if not forloop.first %}
+                            <a href="{{ img.image.url }}" data-lightbox="trip-gallery">
+                                <img src="{{ img.image.url }}"
+                                     style="width:80px; height:60px; object-fit:cover; margin:3px;">
                             </a>
                         {% endif %}
                     {% endfor %}
                 </div>
 
+                <p class="mt-3">{{ trip.description }}</p>
+
             </div>
         </div>
+
+        <!-- PRAWA -->
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm position-sticky">
+
+                <h4>{{ trip.title }}</h4>
+                <p class="text-muted">{{ trip.location }}</p>
+
+                <h4 class="mt-3 fw-bold text-price">
+                    {{ trip.price }} {{ trip.get_currency_symbol }}
+                </h4>
+
+                <div class="mt-3">
+
+                    <p class="mb-1">
+                        <span class="text-muted">Dates:</span><br>
+                        <strong>{{ trip.start_date }} → {{ trip.end_date }}</strong>
+                    </p>
+
+                    <p class="mb-1">
+                        <span class="text-muted">Max guests:</span><br>
+                        <strong>{{ trip.max_people }}</strong>
+                    </p>
+
+                </div>
+
+                {% if trip.available %}
+                    <button class="btn btn-primary w-100 mt-3 btn-book">
+                        Book now
+                    </button>
+                {% else %}
+                    <span class="text-danger">Not available</span>
+                {% endif %}
+
+            </div>
+        </div>
+
     </div>
 </div>
 <div class="text-center mt-3">
