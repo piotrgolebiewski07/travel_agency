@@ -35,3 +35,29 @@
     top: 20px;
 }
 
+.trip-description {
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.divider {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #2a5d9f, transparent);
+    margin: 25px 0;
+    opacity: 0.4;
+}
+
+.trip-location {
+    font-size: 18px;
+    color: #6c757d;
+}
+
+.trip-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.trip-card:hover {
+    transform: translateY(-20px);
+    box-shadow: 0 30px 50px rgba(0,0,0,0.25);
+}
