@@ -2,9 +2,11 @@
 
 {% block content %}
 
+{% load translations %}
+
 <div class="container">
 
-    <h2 class="mb-4 text-center">Upcoming trips</h2>
+    <h2 class="mb-4 text-center">{% t "Dostępne wycieczki" "Upcoming trips" %}</h2>
 
     <div class="row">
         {% for trip in trips %}
@@ -36,7 +38,7 @@
 
     <div class="text-center mt-4">
         <a href="{% url 'index' %}" class="btn btn-primary btn-lg">
-            See all trips
+            {% t "Zobacz wszystkie wycieczki" "See all trips" %}
         </a>
     </div>
 

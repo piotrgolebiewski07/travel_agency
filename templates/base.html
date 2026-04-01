@@ -1,4 +1,7 @@
 {% load static %}
+
+{% load translations %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,16 +18,25 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
     <div class="navbar-nav">
-        <a class="nav-link text-white" href="/">Home</a>
-        <a class="nav-link text-white" href="/trips/">Trips</a>
-        <a class="nav-link text-white" href="/contact/">Contact</a>
+        <a class="nav-link text-white" href="/">{% t "Strona główna" "Home" %}</a>
+        <a class="nav-link text-white" href="/trips/">{% t "Wycieczki" "Trips" %}</a>
+        <a class="nav-link text-white" href="/contact/">{% t "Kontakt" "Contact" %}</a>
     </div>
+
+        <form action="{% url 'set_language' %}" method="post" class="ms-auto d-flex gap-2">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+
+            <button name="language" value="pl" class="btn btn-sm btn-light">PL</button>
+            <button name="language" value="en" class="btn btn-sm btn-light">EN</button>
+        </form>
+
 </nav>
 
 <!-- HERO -->
 <div class="bg-dark text-white text-center py-2 mb-2">
-    <h1 class="display-4">Explore the world</h1>
-    <p class="lead">Find your next adventure</p>
+    <h1 class="display-4">{% t "Odkrywaj świat" "Explore the world" %}</h1>
+    <p class="lead">{% t "Wyrusz w swoją kolejną przygodę" "Find your next adventure" %}</p>
 </div>
 
 {% block content %}
