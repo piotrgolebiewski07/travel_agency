@@ -28,7 +28,16 @@ def home(request):
 
 def index(request):
     trips = Trip.objects.all().order_by("start_date")  # pobiera dane
-    return render(request, "trips/index.html", {"trips": trips})  # przekazuje dane do template
 
+    location = request.GET.get("location")
 
+    if location:
+        trips = trips.filter(location__icontains=location)
+
+    locations = Trip.objects.values_list("location", flat=True).distinct()
+
+    return render(request, "trips/index.html", {
+        "trips": trips,
+        "locations": locations
+    })
 
