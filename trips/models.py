@@ -8,6 +8,7 @@ class Trip(models.Model):
     currency = models.CharField(max_length=3, default="EUR")
     start_date = models.DateField()
     end_date = models.DateField()
+    country = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     max_people = models.IntegerField()
     available = models.BooleanField(default=True)
