@@ -14,19 +14,19 @@
                 <h2 class="mb-3 trip-title">{{ trip.title }}</h2>
 
                 <!-- LARGE PHOTO -->
-                {% for img in trip.images.all %}
-                    {% if forloop.first %}
-                        <a href="{{ img.image.url }}" data-lightbox="trip-gallery">
-                            <img src="{{ img.image.url }}"
+                {% with trip.images.all|dictsortreversed:"is_main"|first as main_img %}
+                    {% if main_img %}
+                        <a href="{{ main_img.image.url }}" data-lightbox="trip-gallery">
+                            <img src="{{ main_img.image.url }}"
                                  style="width:100%; height:400px; object-fit:cover; border-radius:10px;">
                         </a>
                     {% endif %}
-                {% endfor %}
+                {% endwith %}
 
                 <!-- MINIATURES -->
                 <div class="d-flex gap-2 mt-2 mb-3 flex-wrap">
                     {% for img in trip.images.all %}
-                        {% if not forloop.first %}
+                        {% if not img.is_main %}
                             <a href="{{ img.image.url }}" data-lightbox="trip-gallery">
                                 <img src="{{ img.image.url }}"
                                      style="width:90px; height:70px; object-fit:cover; border-radius:6px;">

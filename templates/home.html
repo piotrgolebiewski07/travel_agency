@@ -13,7 +13,7 @@
             <div class="col-md-4">
                 <a href="{% url 'detail' trip.id %}" style="text-decoration: none; color: inherit;">
 
-                    {% with trip.images.first as img %}
+                    {% with trip.images.all|dictsortreversed:"is_main"|first as img %}
                     <div class="card trip-card text-white"
                          style="height: 300px;
                                 background-size: cover;

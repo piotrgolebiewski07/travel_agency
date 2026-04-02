@@ -16,7 +16,7 @@
                 <div class="card mb-3 border-0 trip-card">
 
 
-                        {% with trip.images.first as img %}
+                        {% with trip.images.all|dictsortreversed:"is_main"|first as img %}
                             {% if img %}
                                 <img src="{{ img.image.url }}" class="card-img-top" style="height:220px; object-fit:cover;">
                             {% else %}
