@@ -2,6 +2,7 @@
 
 # 2. Django
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
 
 # 3. Third-party (DRF)
 from rest_framework.viewsets import ModelViewSet
@@ -61,8 +62,12 @@ def index(request):
     if available:
         trips = trips.filter(available=True)
 
+    paginator = Paginator(trips, 5)  # 5 trips na stronę
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(request, "trips/index.html", {
-        "trips": trips,
+        "trips": page_obj,
         "locations": locations,
         "countries": countries
     })
