@@ -1,5 +1,8 @@
 {% extends "base.html" %}
+
 {% load translations %}
+
+{% load plurals %}
 
 {% block content %}
 
@@ -50,6 +53,81 @@
                            placeholder="Max price"
                            class="form-control mb-2"
                            step="1">
+
+                    <hr class="my-3">
+
+
+
+
+
+                    <label class="form-label">Min rating</label>
+
+                    <div class="mb-2">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="min_rating" value=""
+                                   id="rating-any"
+                                   {% if not request.GET.min_rating %}checked{% endif %}>
+                            <label class="form-check-label" for="rating-any">
+                                Any
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="min_rating" value="5"
+                                   id="rating-5"
+                                   {% if request.GET.min_rating == "5" %}checked{% endif %}>
+                            <label class="form-check-label d-flex align-items-center" for="rating-5">
+                                <span class="stars">★★★★★</span>
+                                <span class="ms-2">5+</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="min_rating" value="4"
+                                   id="rating-4"
+                                   {% if request.GET.min_rating == "4" %}checked{% endif %}>
+                            <label class="form-check-label d-flex align-items-center" for="rating-4">
+                                <span class="stars">★★★★</span>
+                                <span class="ms-2">4+</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="min_rating" value="3"
+                                   id="rating-3"
+                                   {% if request.GET.min_rating == "3" %}checked{% endif %}>
+                            <label class="form-check-label d-flex align-items-center" for="rating-3">
+                                <span class="stars">★★★</span>
+                                <span class="ms-2">3+</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="min_rating" value="2"
+                                   id="rating-2"
+                                   {% if request.GET.min_rating == "2" %}checked{% endif %}>
+                            <label class="form-check-label d-flex align-items-center" for="rating-2">
+                                <span class="stars">★★</span>
+                                <span class="ms-2">2+</span>
+                            </label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="min_rating" value="1"
+                                   id="rating-1"
+                                   {% if request.GET.min_rating == "1" %}checked{% endif %}>
+                            <label class="form-check-label d-flex align-items-center" for="rating-1">
+                                <span class="stars">★</span>
+                                <span class="ms-2">1+</span>
+                            </label>
+                        </div>
+
+                    </div>
+
+
+
+
 
                     <hr class="my-3">
 
@@ -109,17 +187,23 @@
                                     <div class="position-relative">
                                         <img src="{{ img.image.url }}" class="card-img-top" style="height:220px; object-fit:cover;">
 
-                                        {% if trip.avg_rating %}
-                                            <div class="position-absolute top-0 start-0 m-2 px-2 py-1"
-                                                 style="background: rgba(0,0,0,0.6); color: #ffd700; border-radius: 6px; font-size: 0.9rem;">
-                                                ⭐ {{ trip.avg_rating|floatformat:1 }} ({{ trip.reviews_count }})
-                                            </div>
-                                        {% else %}
-                                            <div class="position-absolute top-0 start-0 m-2 px-2 py-1"
-                                                 style="background: rgba(0,0,0,0.6); color: #ccc; border-radius: 6px; font-size: 0.8rem;">
-                                                No reviews yet
-                                            </div>
-                                        {% endif %}
+                                        <div class="position-absolute top-0 end-0 m-2 px-2 py-1"
+                                             style="background: rgba(0,0,0,0.6); border-radius: 6px; font-size: 0.85rem;">
+                                            {% if trip.reviews_count > 0 %}
+                                                <p class="mb-0" style="color:#ffd700; font-weight:500;">
+                                                    {{ trip.avg_rating|floatformat:1 }} / 5
+                                                </p>
+
+                                                <p class="mb-0 text-light small">
+                                                    {{ trip.reviews_count }} {{ trip.reviews_count|review_word:request.LANGUAGE_CODE }}
+                                                </p>
+                                            {% else %}
+                                                <p class="mb-0 text-light small">
+                                                    {% t "Brak opinii" "No reviews yet" %}
+                                                </p>
+                                            {% endif %}
+
+                                        </div>
                                     </div>
                                 {% else %}
                                     <img src="https://via.placeholder.com/400x250" class="card-img-top">
@@ -190,4 +274,8 @@
 
 
 {% endblock %}
+
+
+
+
 
