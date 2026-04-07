@@ -3,6 +3,7 @@
 # 2. Django
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from django.db.models import Avg, Count
 
 # 3. Third-party (DRF)
 from rest_framework.viewsets import ModelViewSet
@@ -17,18 +18,19 @@ class TripViewSet(ModelViewSet):
     serializer_class = TripSerializer
 
 
-def trip_detail(request, pk):
-    trip = get_object_or_404(Trip, pk=pk)
-    return render(request, "trips/detail.html", {"trip": trip})
-
-
 def home(request):
-    trips = Trip.objects.all().order_by("start_date")[:3]
+    trips = Trip.objects.all().annotate(
+        avg_rating=Avg("reviews__rating"),
+        reviews_count=Count("reviews")
+    ).order_by("start_date")[:3]
+
     return render(request, "home.html", {"trips": trips})
 
-
 def index(request):
-    trips = Trip.objects.all().order_by("start_date")  # pobiera dane
+    trips = Trip.objects.all().annotate(
+        avg_rating=Avg("reviews__rating"),
+        reviews_count=Count("reviews")
+    ).order_by("start_date")   # pobiera dane
 
     locations = Trip.objects.values_list("location", flat=True).distinct().order_by("location")
     countries = Trip.objects.values_list("country", flat=True).distinct().order_by("country")
