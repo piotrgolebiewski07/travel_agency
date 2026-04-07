@@ -39,6 +39,7 @@ def index(request):
     location = request.GET.get("location")
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
+    min_rating = request.GET.get("min_rating")
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
     available = request.GET.get("available")
@@ -63,6 +64,9 @@ def index(request):
 
     if available:
         trips = trips.filter(available=True)
+
+    if min_rating:
+        trips = trips.filter(avg_rating__gte=float(min_rating))
 
     paginator = Paginator(trips, 5)  # 5 trips na stronę
     page_number = request.GET.get("page")
