@@ -1,14 +1,14 @@
 # 1. Standard library
 
 # 2. Django
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 
 # 3. Third-party (DRF)
 from rest_framework.viewsets import ModelViewSet
 
 # 4. Local imports
-from .models import Trip
+from .models import Trip, Review
 from .serializers import TripSerializer
 
 
@@ -72,3 +72,17 @@ def index(request):
         "countries": countries
     })
 
+
+def trip_detail(request, pk):
+    trip = get_object_or_404(Trip, pk=pk)
+
+    if request.method == "POST":
+        Review.objects.create(
+            trip=trip,
+            name=request.POST.get("name"),
+            rating=request.POST.get("rating"),
+            comment=request.POST.get("comment"),
+        )
+        return redirect("detail", pk=pk)
+
+    return render(request, "trips/detail.html", {"trip": trip})
