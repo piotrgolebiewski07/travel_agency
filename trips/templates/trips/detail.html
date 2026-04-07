@@ -41,6 +41,37 @@
                     {{ trip.description|linebreaks }}
                 </p>
 
+                <h4 class="mt-4">Add Review</h4>
+                <form method="post">
+                    {% csrf_token %}
+
+                    <input type="text" name="name" placeholder="Your name" class="form-control mb-2" required>
+
+                    <select name="rating" class="form-select mb-2">
+                        <option value="5">5 ⭐</option>
+                        <option value="4">4 ⭐</option>
+                        <option value="3">3 ⭐</option>
+                        <option value="2">2 ⭐</option>
+                        <option value="1">1 ⭐</option>
+                    </select>
+
+                    <textarea name="comment" placeholder="Your review" class="form-control mb-2" required></textarea>
+                    <button class="btn btn-primary">Submit Review</button>
+                </form>
+
+                <hr class="my-3">
+
+                <h4 class="mt-4">Reviews</h4>
+
+                {% for review in trip.reviews.all|dictsortreversed:"created_at" %}
+                    <div class="border p-2 mb-2 rounded">
+                        <strong>{{ review.name }}</strong> — {{ review.rating }} ⭐
+                        <p class="mb-0">{{ review.comment }}</p>
+                    </div>
+                {% empty %}
+                    <p>No reviews yet</p>
+                {% endfor %}
+
             </div>
         </div>
 

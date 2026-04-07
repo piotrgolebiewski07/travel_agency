@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip, TripImage
+from .models import Trip, TripImage, Review
 
 
 class TripImageInline(admin.TabularInline):
@@ -12,4 +12,5 @@ class TripAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Trip, TripAdmin)
+admin.site.register(Review)
 

@@ -106,7 +106,21 @@
 
                             {% with trip.images.all|dictsortreversed:"is_main"|first as img %}
                                 {% if img %}
-                                    <img src="{{ img.image.url }}" class="card-img-top" style="height:220px; object-fit:cover;">
+                                    <div class="position-relative">
+                                        <img src="{{ img.image.url }}" class="card-img-top" style="height:220px; object-fit:cover;">
+
+                                        {% if trip.avg_rating %}
+                                            <div class="position-absolute top-0 start-0 m-2 px-2 py-1"
+                                                 style="background: rgba(0,0,0,0.6); color: #ffd700; border-radius: 6px; font-size: 0.9rem;">
+                                                ⭐ {{ trip.avg_rating|floatformat:1 }} ({{ trip.reviews_count }})
+                                            </div>
+                                        {% else %}
+                                            <div class="position-absolute top-0 start-0 m-2 px-2 py-1"
+                                                 style="background: rgba(0,0,0,0.6); color: #ccc; border-radius: 6px; font-size: 0.8rem;">
+                                                No reviews yet
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 {% else %}
                                     <img src="https://via.placeholder.com/400x250" class="card-img-top">
                                 {% endif %}
@@ -120,7 +134,7 @@
                                     {{ trip.price }} {{ trip.get_currency_symbol }}
                                 </h4>
 
-                                <p class="text-muted small mb-2">
+                               <p class="text-muted small mb-2">
                                     {{ trip.start_date|date:"d.m.Y" }} → {{ trip.end_date|date:"d.m.Y" }}
                                 </p>
                             </div>

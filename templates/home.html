@@ -25,6 +25,15 @@
 
                             <h4>{{ trip.title }}</h4>
                             <p class="mb-1">{{ trip.country }}, {{ trip.location }}</p>
+                            {% if trip.reviews_count > 0 %}
+                                <p class="mb-1" style="color: #ffd700;">
+                                    ⭐ {{ trip.avg_rating|floatformat:1 }} ({{ trip.reviews_count }})
+                                </p>
+                            {% else %}
+                                <p class="mb-1" style="color: #ccc;">
+                                    No reviews yet
+                                </p>
+                            {% endif %}
                             <strong>{{ trip.price }} {{ trip.get_currency_symbol }}</strong>
 
                         </div>
