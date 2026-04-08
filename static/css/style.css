@@ -81,3 +81,14 @@
     margin-top: 5px;        /* 🔥 usuwa przesunięcie */
     margin-right: 8px;    /* odstęp od gwiazdek */
 }
+
+input.form-control.custom-search {
+    border: 2px solid #ddd;
+    border-radius: 50px;
+}
+
+input.form-control.custom-search:focus {
+    outline: none !important;
+    border: 2px solid #0d6efd !important;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25) !important;
+}
