@@ -56,10 +56,6 @@
 
                     <hr class="my-3">
 
-
-
-
-
                     <label class="form-label">Min rating</label>
 
                     <div class="mb-2">
@@ -125,10 +121,6 @@
 
                     </div>
 
-
-
-
-
                     <hr class="my-3">
 
                     <label class="form-label">Start date</label>
@@ -170,6 +162,54 @@
 
         <!-- RESULTS -->
         <div class="col-md-9">
+            <form method="get" class="d-flex gap-2 mb-3">
+                <input type="hidden" name="country" value="{{ request.GET.country }}">
+                <input type="hidden" name="location" value="{{ request.GET.location }}">
+                <input type="hidden" name="min_price" value="{{ request.GET.min_price }}">
+                <input type="hidden" name="max_price" value="{{ request.GET.max_price }}">
+                <input type="hidden" name="start_date" value="{{ request.GET.start_date }}">
+                <input type="hidden" name="end_date" value="{{ request.GET.end_date }}">
+                <input type="hidden" name="available" value="{{ request.GET.available }}">
+                <input type="hidden" name="min_rating" value="{{ request.GET.min_rating }}">
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="🔍 Szukaj wycieczek..."
+                       value="{{ request.GET.search }}">
+
+                <select name="sort" class="form-select" style="max-width: 200px;">
+                    <option value="">Sortuj</option>
+
+                    <option value="price_asc"
+                        {% if request.GET.sort == "price_asc" %}selected{% endif %}>
+                        Cena rosnąco
+                    </option>
+
+                    <option value="price_desc"
+                        {% if request.GET.sort == "price_desc" %}selected{% endif %}>
+                        Cena malejąco
+                    </option>
+
+                    <option value="rating"
+                        {% if request.GET.sort == "rating" %}selected{% endif %}>
+                        Najlepiej oceniane
+                    </option>
+
+                    <option value="start_date"
+                        {% if request.GET.sort == "start_date" %}selected{% endif %}>
+                        Od najbliższego
+                    </option>
+
+                    <option value="end_date"
+                        {% if request.GET.sort == "end_date" %}selected{% endif %}>
+                        Od ostatniego
+                    </option>
+                </select>
+
+                <button class="btn btn-primary">OK</button>
+
+            </form>
+
 
             <h2 class="mb-4 text-center">
                 {% t "Wszystkie wycieczki" "All trips" %}

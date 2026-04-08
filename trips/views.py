@@ -3,8 +3,9 @@
 # 2. Django
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Q
 from django_filters.rest_framework import DjangoFilterBackend
+
 
 # 3. Third-party (DRF)
 from rest_framework.viewsets import ModelViewSet
@@ -67,6 +68,8 @@ def index(request):
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
     available = request.GET.get("available")
+    search = request.GET.get("search")
+    sort = request.GET.get("sort")
 
     if country:
         trips = trips.filter(country=country)
@@ -91,6 +94,25 @@ def index(request):
 
     if min_rating:
         trips = trips.filter(avg_rating__gte=float(min_rating))
+
+    if search:
+        trips = trips.filter(
+            Q(title__icontains=search) |
+            Q(country__icontains=search) |
+            Q(location__icontains=search) |
+            Q(description__icontains=search)
+        ).distinct().order_by("-start_date")
+
+    if sort == "price_asc":
+        trips = trips.order_by("price")
+    elif sort == "price_desc":
+        trips = trips.order_by("-price")
+    elif sort == "rating":
+        trips = trips.order_by("-avg_rating")
+    elif sort == "start_date":
+        trips = trips.order_by("start_date")
+    elif sort == "end_date":
+        trips = trips.order_by("-end_date")
 
     paginator = Paginator(trips, 5)  # 5 trips na stronę
     page_number = request.GET.get("page")
