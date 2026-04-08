@@ -14,6 +14,8 @@
             <div class="card p-3 shadow-sm position-sticky" style="top: 20px;">
 
                 <form method="get">
+                    <input type="hidden" name="search" value="{{ request.GET.search }}">
+                    <input type="hidden" name="sort" value="{{ request.GET.sort }}">
                     <h5 class="mb-3">{% t "Filtry" "Filters" %}</h5>
 
                     <label class="form-label">Country</label>
@@ -162,7 +164,7 @@
 
         <!-- RESULTS -->
         <div class="col-md-9">
-            <form method="get" class="d-flex gap-2 mb-3">
+            <form method="get" class="d-flex justify-content-center align-items-center gap-3 mb-3">
                 <input type="hidden" name="country" value="{{ request.GET.country }}">
                 <input type="hidden" name="location" value="{{ request.GET.location }}">
                 <input type="hidden" name="min_price" value="{{ request.GET.min_price }}">
@@ -172,12 +174,13 @@
                 <input type="hidden" name="available" value="{{ request.GET.available }}">
                 <input type="hidden" name="min_rating" value="{{ request.GET.min_rating }}">
                 <input type="text"
-                       name="search"
-                       class="form-control"
-                       placeholder="🔍 Szukaj wycieczek..."
-                       value="{{ request.GET.search }}">
+                   name="search"
+                   class="form-control custom-search"
+                   placeholder="🔍 Szukaj wycieczek..."
+                   value="{{ request.GET.search }}"
+                   style="width: 280px;">
 
-                <select name="sort" class="form-select" style="max-width: 200px;">
+                <select name="sort" class="form-select rounded-pill" style="width: 180px;">
                     <option value="">Sortuj</option>
 
                     <option value="price_asc"
@@ -206,14 +209,22 @@
                     </option>
                 </select>
 
-                <button class="btn btn-primary">OK</button>
+                <button class="btn btn-primary rounded-pill px-4">
+                    OK
+                </button>
 
             </form>
 
-
-            <h2 class="mb-4 text-center">
-                {% t "Wszystkie wycieczki" "All trips" %}
-            </h2>
+            {% if request.GET.search %}
+                <h2 class="mb-4 text-center">
+                    Wyniki dla "{{ request.GET.search }}" ({{ trips.paginator.count }})
+                </h2>
+            {% else %}
+                <h2 class="mb-4 text-center">
+                    Znaleziono {{ trips.paginator.count }}
+                    {{ trips.paginator.count|pluralize:"wycieczkę,wycieczki,wycieczek" }}
+                </h2>
+            {% endif %}
 
             <div class="row">
 
@@ -268,7 +279,13 @@
                 </div>
                 {% empty %}
                 <div class="col-12 text-center">
-                    <p>No trips available</p>
+                    {% if request.GET.search %}
+                        <p>
+                            Brak wyników dla "<strong>{{ request.GET.search }}</strong>"
+                        </p>
+                    {% else %}
+                        <p>No trips available</p>
+                    {% endif %}
                 </div>
                 {% endfor %}
 
@@ -310,9 +327,6 @@
         </div>
     </div>
 </div>
-
-
-
 {% endblock %}
 
 
