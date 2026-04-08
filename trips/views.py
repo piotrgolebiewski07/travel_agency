@@ -4,6 +4,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count
+from django_filters.rest_framework import DjangoFilterBackend
 
 # 3. Third-party (DRF)
 from rest_framework.viewsets import ModelViewSet
@@ -14,11 +15,27 @@ from .serializers import TripSerializer
 
 
 class TripViewSet(ModelViewSet):
-    queryset = Trip.objects.annotate(
-        avg_rating=Avg("reviews__rating"),
-        reviews_count=Count("reviews")
-    )
     serializer_class = TripSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        "price": ["gte", "lte"],
+        "country": ["exact"],
+        "start_date": ["gte", "lte"],
+        "available": ["exact"],
+    }
+
+    def get_queryset(self):
+        queryset = Trip.objects.annotate(
+            avg_rating=Avg("reviews__rating"),
+            reviews_count=Count("reviews")
+        )
+
+        min_rating = self.request.query_params.get("min_rating")
+
+        if min_rating:
+            queryset = queryset.filter(avg_rating__gte=float(min_rating))
+
+        return queryset
 
 
 def home(request):
