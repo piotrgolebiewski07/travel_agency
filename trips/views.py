@@ -14,7 +14,10 @@ from .serializers import TripSerializer
 
 
 class TripViewSet(ModelViewSet):
-    queryset = Trip.objects.all()
+    queryset = Trip.objects.annotate(
+        avg_rating=Avg("reviews__rating"),
+        reviews_count=Count("reviews")
+    )
     serializer_class = TripSerializer
 
 
@@ -25,6 +28,7 @@ def home(request):
     ).order_by("start_date")[:3]
 
     return render(request, "home.html", {"trips": trips})
+
 
 def index(request):
     trips = Trip.objects.all().annotate(
