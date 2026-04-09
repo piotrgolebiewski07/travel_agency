@@ -53,10 +53,10 @@ def home(request):
 
 
 def index(request):
-    trips = Trip.objects.all().annotate(
+    trips = Trip.objects.prefetch_related("images", "reviews").annotate(
         avg_rating=Avg("reviews__rating"),
         reviews_count=Count("reviews")
-    ).order_by("start_date")   # pobiera dane
+    ).order_by("start_date")
 
     locations = Trip.objects.values_list("location", flat=True).distinct().order_by("location")
     countries = Trip.objects.values_list("country", flat=True).distinct().order_by("country")
@@ -127,7 +127,10 @@ def index(request):
 
 
 def trip_detail(request, pk):
-    trip = get_object_or_404(Trip, pk=pk)
+    trip = get_object_or_404(
+        Trip.objects.prefetch_related("images", "reviews"),
+        pk=pk
+    )
 
     if request.method == "POST":
         form = ReviewForm(request.POST)
