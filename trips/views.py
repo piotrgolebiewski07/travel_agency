@@ -94,7 +94,7 @@ def index(request):
         trips = trips.filter(available=True)
 
     if min_rating is not None:
-        trips = trips.filter(avg_rating__gte=float(min_rating))
+        trips = trips.filter(avg_rating__gte=min_rating)
 
     if search:
         trips = trips.filter(
@@ -133,6 +133,9 @@ def trip_detail(request, pk):
     )
 
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect("login")
+
         form = ReviewForm(request.POST)
 
         if form.is_valid():
