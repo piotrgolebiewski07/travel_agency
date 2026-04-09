@@ -45,17 +45,23 @@
                 <form method="post">
                     {% csrf_token %}
 
-                    <input type="text" name="name" placeholder="Your name" class="form-control mb-2" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            {{ form.name }}
+                            <div class="text-danger small">{{ form.name.errors }}</div>
+                        </div>
 
-                    <select name="rating" class="form-select mb-2">
-                        <option value="5">5 ⭐</option>
-                        <option value="4">4 ⭐</option>
-                        <option value="3">3 ⭐</option>
-                        <option value="2">2 ⭐</option>
-                        <option value="1">1 ⭐</option>
-                    </select>
+                        <div class="col-md-6 mb-2">
+                            {{ form.rating }}
+                            <div class="text-danger small">{{ form.rating.errors }}</div>
+                        </div>
+                    </div>
 
-                    <textarea name="comment" placeholder="Your review" class="form-control mb-2" required></textarea>
+                    <div class="mb-2">
+                        {{ form.comment }}
+                        <div class="text-danger small">{{ form.comment.errors }}</div>
+                    </div>
+
                     <button class="btn btn-primary">Submit Review</button>
                 </form>
 

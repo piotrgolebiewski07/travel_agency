@@ -14,6 +14,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 # 4. Local imports
 from .models import Trip, Review
 from .serializers import TripSerializer
+from .forms import ReviewForm
 
 
 class TripViewSet(ModelViewSet):
@@ -52,10 +53,10 @@ def home(request):
 
 
 def index(request):
-    trips = Trip.objects.all().annotate(
+    trips = Trip.objects.prefetch_related("images", "reviews").annotate(
         avg_rating=Avg("reviews__rating"),
         reviews_count=Count("reviews")
-    ).order_by("start_date")   # pobiera dane
+    ).order_by("start_date")
 
     locations = Trip.objects.values_list("location", flat=True).distinct().order_by("location")
     countries = Trip.objects.values_list("country", flat=True).distinct().order_by("country")
@@ -126,15 +127,23 @@ def index(request):
 
 
 def trip_detail(request, pk):
-    trip = get_object_or_404(Trip, pk=pk)
+    trip = get_object_or_404(
+        Trip.objects.prefetch_related("images", "reviews"),
+        pk=pk
+    )
 
     if request.method == "POST":
-        Review.objects.create(
-            trip=trip,
-            name=request.POST.get("name"),
-            rating=request.POST.get("rating"),
-            comment=request.POST.get("comment"),
-        )
-        return redirect("detail", pk=pk)
+        form = ReviewForm(request.POST)
 
-    return render(request, "trips/detail.html", {"trip": trip})
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.trip = trip
+            review.save()
+            return redirect("detail", pk=pk)
+    else:
+        form = ReviewForm()
+
+    return render(request, "trips/detail.html", {
+        "trip": trip,
+        "form": form
+    })
