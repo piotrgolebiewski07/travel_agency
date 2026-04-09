@@ -42,28 +42,35 @@
                 </p>
 
                 <h4 class="mt-4">Add Review</h4>
-                <form method="post">
-                    {% csrf_token %}
 
-                    <div class="row">
-                        <div class="col-md-6 mb-2">
-                            {{ form.name }}
-                            <div class="text-danger small">{{ form.name.errors }}</div>
+                {% if request.user.is_authenticated %}
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                {{ form.name }}
+                                <div class="text-danger small">{{ form.name.errors }}</div>
+                            </div>
+
+                            <div class="col-md-6 mb-2">
+                                {{ form.rating }}
+                                <div class="text-danger small">{{ form.rating.errors }}</div>
+                            </div>
                         </div>
 
-                        <div class="col-md-6 mb-2">
-                            {{ form.rating }}
-                            <div class="text-danger small">{{ form.rating.errors }}</div>
+                        <div class="mb-2">
+                            {{ form.comment }}
+                            <div class="text-danger small">{{ form.comment.errors }}</div>
                         </div>
-                    </div>
 
-                    <div class="mb-2">
-                        {{ form.comment }}
-                        <div class="text-danger small">{{ form.comment.errors }}</div>
-                    </div>
-
-                    <button class="btn btn-primary">Submit Review</button>
-                </form>
+                        <button class="btn btn-primary">Submit Review</button>
+                    </form>
+                {% else %}
+                    <p class="text-muted">
+                        Zaloguj się, aby dodać opinię
+                    </p>
+                {% endif %}
 
                 <hr class="my-3">
 
