@@ -35,7 +35,7 @@ class TripImage(models.Model):
 class Review(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="reviews")
     name = models.CharField(max_length=100)
-    rating = models.IntegerField()
+    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

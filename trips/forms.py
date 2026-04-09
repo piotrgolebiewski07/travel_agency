@@ -4,17 +4,6 @@ from .models import Review
 
 class ReviewForm(forms.ModelForm):
 
-    rating = forms.ChoiceField(
-        choices=[
-            (5, "5 ⭐"),
-            (4, "4 ⭐"),
-            (3, "3 ⭐"),
-            (2, "2 ⭐"),
-            (1, "1 ⭐"),
-        ],
-        widget=forms.Select(attrs={"class": "form-select"})
-    )
-
     class Meta:
         model = Review
         fields = ["name", "rating", "comment"]
@@ -25,7 +14,10 @@ class ReviewForm(forms.ModelForm):
         }
 
     def clean_rating(self):
-        rating = int(self.cleaned_data.get("rating"))
+        rating = self.cleaned_data.get("rating")
+
+        if rating is None:
+            raise forms.ValidationError("Rating is required")
 
         if rating < 1 or rating > 5:
             raise forms.ValidationError("Rating must be between 1 and 5")
