@@ -11,6 +11,10 @@ class TripAdmin(admin.ModelAdmin):
     inlines = [TripImageInline]
 
 
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ("name", "trip", "rating", "created_at")
+
+
 admin.site.register(Trip, TripAdmin)
-admin.site.register(Review)
+admin.site.register(Review, ReviewAdmin)
 

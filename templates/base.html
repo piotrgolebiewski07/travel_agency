@@ -17,19 +17,44 @@
 <body style="background-color: #f5f7fa;">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
-    <div class="navbar-nav">
-        <a class="nav-link text-white" href="/">{% t "Strona główna" "Home" %}</a>
-        <a class="nav-link text-white" href="/trips/">{% t "Wycieczki" "Trips" %}</a>
-        <a class="nav-link text-white" href="/contact/">{% t "Kontakt" "Contact" %}</a>
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+
+        <!-- LEFT -->
+        <div class="navbar-nav d-flex flex-row gap-3">
+            <a class="nav-link text-white" href="/">{% t "Strona główna" "Home" %}</a>
+            <a class="nav-link text-white" href="/trips/">{% t "Wycieczki" "Trips" %}</a>
+            <a class="nav-link text-white" href="/contact/">{% t "Kontakt" "Contact" %}</a>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="d-flex gap-2 align-items-center">
+
+            {% if request.user.is_authenticated %}
+                <span class="text-white small">
+                    {{ request.user.username }}
+                </span>
+
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-light">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-sm btn-light">
+                    Login
+                </a>
+            {% endif %}
+
+            <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+
+                <button name="language" value="pl" class="btn btn-sm btn-light">PL</button>
+                <button name="language" value="en" class="btn btn-sm btn-light">EN</button>
+            </form>
+
+        </div>
+
     </div>
-
-        <form action="{% url 'set_language' %}" method="post" class="ms-auto d-flex gap-2">
-            {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.path }}">
-
-            <button name="language" value="pl" class="btn btn-sm btn-light">PL</button>
-            <button name="language" value="en" class="btn btn-sm btn-light">EN</button>
-        </form>
 
 </nav>
 
