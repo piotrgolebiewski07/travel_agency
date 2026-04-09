@@ -63,9 +63,9 @@ def index(request):
 
     country = request.GET.get("country")
     location = request.GET.get("location")
-    min_price = request.GET.get("min_price")
-    max_price = request.GET.get("max_price")
-    min_rating = request.GET.get("min_rating")
+    min_price = safe_float(request.GET.get("min_price"))
+    max_price = safe_float(request.GET.get("max_price"))
+    min_rating = safe_float (request.GET.get("min_rating"))
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
     available = request.GET.get("available")
@@ -78,10 +78,10 @@ def index(request):
     if location:
         trips = trips.filter(location__icontains=location)
 
-    if min_price:
+    if min_price is not None:
         trips = trips.filter(price__gte=min_price)
 
-    if max_price:
+    if max_price is not None:
         trips = trips.filter(price__lte=max_price)
 
     if start_date:
@@ -93,7 +93,7 @@ def index(request):
     if available:
         trips = trips.filter(available=True)
 
-    if min_rating:
+    if min_rating is not None:
         trips = trips.filter(avg_rating__gte=float(min_rating))
 
     if search:
@@ -147,3 +147,10 @@ def trip_detail(request, pk):
         "trip": trip,
         "form": form
     })
+
+
+def safe_float(value):
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
