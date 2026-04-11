@@ -1,4 +1,6 @@
 from django.db import models
+from decimal import Decimal
+from django.utils import translation
 
 
 class Trip(models.Model):
@@ -16,13 +18,17 @@ class Trip(models.Model):
     available = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.title
+        return self.title_pl or self.title_en
 
-    def get_currency_symbol(self):
-        if self.currency == "EUR":
-            return "€"
-        if self.currency == "PLN":
-            return "zł"
+    def get_price_display(self):
+        lang = translation.get_language()
+
+        if lang == "pl":
+            if self.currency == "EUR":
+                return f"{int(self.price * Decimal('4.26'))} zł"
+            return f"{int(self.price)} zł"
+
+        return f"{int(self.price)} €"
 
 
 class TripImage(models.Model):
@@ -31,7 +37,7 @@ class TripImage(models.Model):
     is_main = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Image for {self.trip.title}"
+        return f"Image for {self.trip.title_pl or self.trip.title_en }"
 
 
 class Review(models.Model):
@@ -42,7 +48,7 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name} - {self.trip.title}"
+        return f"{self.name} - {self.trip.title_pl or self.trip.title_en}"
 
 
 class ContactMessage(models.Model):
