@@ -11,7 +11,13 @@
         <div class="col-md-8">
             <div class="card shadow-lg border-0 p-4">
 
-                <h2 class="mb-3 trip-title">{{ trip.title }}</h2>
+                <h2 class="mb-3 trip-title">
+                    {% if request.LANGUAGE_CODE == "pl" %}
+                        {{ trip.title_pl|default:trip.title_en }}
+                    {% else %}
+                        {{ trip.title_en|default:trip.title_pl }}
+                    {% endif %}
+                </h2>
 
                 <!-- LARGE PHOTO -->
                 {% with trip.images.all|dictsortreversed:"is_main"|first as main_img %}
@@ -38,10 +44,14 @@
                 <hr class="my-1 divider">
 
                 <p class="mt-1 trip-description">
-                    {{ trip.description|linebreaks }}
+                    {% if request.LANGUAGE_CODE == "pl" %}
+                        {{ trip.description_pl|default:trip.description_en|linebreaks }}
+                    {% else %}
+                        {{ trip.description_en|default:trip.description_pl|linebreaks }}
+                    {% endif %}
                 </p>
 
-                <h4 class="mt-4">Add Review</h4>
+                <h4 class="mt-4">{% t "Dodaj opinię" "Add Review" %}</h4>
 
                 {% if request.user.is_authenticated %}
                     <form method="post">
@@ -49,32 +59,35 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-2">
+                                <label>{% t "Imię" "Name" %}</label>
                                 {{ form.name }}
                                 <div class="text-danger small">{{ form.name.errors }}</div>
                             </div>
 
                             <div class="col-md-6 mb-2">
+                                <label>{% t "Ocena" "Rating" %}</label>
                                 {{ form.rating }}
                                 <div class="text-danger small">{{ form.rating.errors }}</div>
                             </div>
                         </div>
 
                         <div class="mb-2">
+                            <label>{% t "Komentarz" "Comment" %}</label>
                             {{ form.comment }}
                             <div class="text-danger small">{{ form.comment.errors }}</div>
                         </div>
 
-                        <button class="btn btn-primary">Submit Review</button>
+                        <button class="btn btn-primary">{% t "Prześlij recenzję" "Submit Review" %}</button>
                     </form>
                 {% else %}
                     <p class="text-muted">
-                        Zaloguj się, aby dodać opinię
+                        {% t "Zaloguj się, aby dodać opinię " "Log in to add a review" %}
                     </p>
                 {% endif %}
 
                 <hr class="my-3">
 
-                <h4 class="mt-4">Reviews</h4>
+                <h4 class="mt-4">{% t "Opinie" "Reviews" %}</h4>
 
                 {% for review in trip.reviews.all|dictsortreversed:"created_at" %}
                     <div class="border p-2 mb-2 rounded">
@@ -82,7 +95,7 @@
                         <p class="mb-0">{{ review.comment }}</p>
                     </div>
                 {% empty %}
-                    <p>No reviews yet</p>
+                    <p>{% t "Brak opinii" "No reviews yet" %}</p>
                 {% endfor %}
 
             </div>
@@ -95,7 +108,7 @@
                 <p class="trip-location mb-2">
                     {{ trip.country }}, {{ trip.location }}
                     <a class="badge bg-light text-primary border" href="https://www.google.com/maps?q={{ trip.location }}" target="_blank">
-                        {% t  "zobacz na mapie" "view_on_map" %}
+                        {% t  "Zobacz na mapie" "View on map" %}
                     </a>
                 </p>
 
@@ -107,9 +120,7 @@
 
                     <p class="mb-2">
                         <span class="text-muted">
-                            <span class="text-muted">
-                                {% t "Daty:" "Dates:" %}
-                            </span>
+                            {% t "Daty:" "Dates:" %}
                         </span>
 
                         <strong>{{ trip.start_date|date:"d.m.Y" }} → {{ trip.end_date|date:"d.m.Y" }}</strong>

@@ -9,8 +9,8 @@ class ReviewForm(forms.ModelForm):
         fields = ["name", "rating", "comment"]
 
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Your name"}),
-            "comment": forms.Textarea(attrs={"class": "form-control", "placeholder": "Your review"}),
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "comment": forms.Textarea(attrs={"class": "form-control"})
         }
 
     def clean_rating(self):
@@ -31,7 +31,7 @@ class ContactForm(forms.Form):
         max_length=100,
         widget=forms.TextInput(attrs={
             "class": "form-control",
-            "style": "max-width: 400px;"
+            "style": "max-width: 400px",
         })
     )
 
