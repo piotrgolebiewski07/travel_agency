@@ -18,9 +18,9 @@
                     <input type="hidden" name="sort" value="{{ request.GET.sort }}">
                     <h5 class="mb-3">{% t "Filtry" "Filters" %}</h5>
 
-                    <label class="form-label">Country</label>
+                    <label class="form-label">{% t "Kraj" "Country" %}</label>
                     <select name="country" class="form-select mb-2">
-                        <option value="">All countries</option>
+                        <option value="">{% t "Wszystkie kraje" "All countries" %}</option>
                         {% for c in countries %}
                             <option value="{{ c }}"
                                 {% if request.GET.country == c %}selected{% endif %}>
@@ -29,9 +29,9 @@
                         {% endfor %}
                     </select>
 
-                    <label class="form-label">Location</label>
+                    <label class="form-label">{% t "Lokalizacja" "Location" %}</label>
                     <select name="location" class="form-select mb-2">
-                        <option value="">All locations</option>
+                        <option value="">{% t "Wszystkie lokalizacje" "All locations" %}</option>
                         {% for loc in locations %}
                             <option value="{{ loc }}"
                                 {% if request.GET.location == loc %}selected{% endif %}>
@@ -40,25 +40,25 @@
                         {% endfor %}
                     </select>
 
-                    <label class="form-label">Min price</label>
+                    <label class="form-label">{% t "Cena od" "Min price" %}</label>
                     <input type="number"
                            name="min_price"
                            value="{{ request.GET.min_price }}"
-                           placeholder="Min price"
+                           placeholder="{% t 'Cena od' 'Min price' %}"
                            class="form-control mb-2"
                            step="1">
 
-                    <label class="form-label">Max price</label>
+                    <label class="form-label">{% t "Cena do" "Max price" %}</label>
                     <input type="number"
                            name="max_price"
                            value="{{ request.GET.max_price }}"
-                           placeholder="Max price"
+                           placeholder="{% t 'Cena do' 'Max price' %}"
                            class="form-control mb-2"
                            step="1">
 
                     <hr class="my-3">
 
-                    <label class="form-label">Min rating</label>
+                    <label class="form-label">{% t "Ocena Tripadvisor" "Tripadvisor rating" %}</label>
 
                     <div class="mb-2">
 
@@ -67,7 +67,7 @@
                                    id="rating-any"
                                    {% if not request.GET.min_rating %}checked{% endif %}>
                             <label class="form-check-label" for="rating-any">
-                                Any
+                                {% t "Dowolna" "Any" %}
                             </label>
                         </div>
 
@@ -125,13 +125,13 @@
 
                     <hr class="my-3">
 
-                    <label class="form-label">Start date</label>
+                    <label class="form-label">{% t "Data rozpoczęcia" "Start date" %}</label>
                     <input type="date"
                            name="start_date"
                            value="{{ request.GET.start_date }}"
                            class="form-control mb-2">
 
-                    <label class="form-label">End date</label>
+                    <label class="form-label">{% t "Data zakończenia" "End date" %}</label>
                     <input type="date"
                            name="end_date"
                            value="{{ request.GET.end_date }}"
@@ -150,11 +150,11 @@
                     </div>
 
                     <button class="btn btn-primary w-100">
-                        Filter
+                        {% t "Filtruj" "Filter" %}
                     </button>
 
                     <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100 mt-2">
-                        Reset
+                        {% t "Resetuj" "Reset" %}
                     </a>
 
                 </form>
@@ -176,36 +176,36 @@
                 <input type="text"
                    name="search"
                    class="form-control custom-search"
-                   placeholder="🔍 Szukaj wycieczek..."
+                   placeholder="{% t '🔍 Szukaj wycieczek...' '🔍 Search trips...' %}"
                    value="{{ request.GET.search }}"
                    style="width: 280px;">
 
                 <select name="sort" class="form-select rounded-pill" style="width: 180px;">
-                    <option value="">Sortuj</option>
+                    <option value="">{% t "Sortuj" "Sort" %}</option>
 
                     <option value="price_asc"
                         {% if request.GET.sort == "price_asc" %}selected{% endif %}>
-                        Cena rosnąco
+                        {% t "Cena rosnąco" "Price ascending" %}
                     </option>
 
                     <option value="price_desc"
                         {% if request.GET.sort == "price_desc" %}selected{% endif %}>
-                        Cena malejąco
+                        {% t "Cena malejąco" "Price descending" %}
                     </option>
 
                     <option value="rating"
                         {% if request.GET.sort == "rating" %}selected{% endif %}>
-                        Najlepiej oceniane
+                        {% t "Najlepiej oceniane" "Top rated" %}
                     </option>
 
                     <option value="start_date"
                         {% if request.GET.sort == "start_date" %}selected{% endif %}>
-                        Od najbliższego
+                        {% t "Od najbliższego" "Closest first" %}
                     </option>
 
                     <option value="end_date"
                         {% if request.GET.sort == "end_date" %}selected{% endif %}>
-                        Od ostatniego
+                        {% t "Od ostatniego" "Latest first" %}
                     </option>
                 </select>
 
@@ -217,12 +217,16 @@
 
             {% if request.GET.search %}
                 <h2 class="mb-4 text-center">
-                    Wyniki dla "{{ request.GET.search }}" ({{ trips.paginator.count }})
+                    {% t "Wyniki dla" "Results for" %} "{{ request.GET.search }}"
                 </h2>
             {% else %}
                 <h2 class="mb-4 text-center">
-                    Znaleziono {{ trips.paginator.count }}
-                    {{ trips.paginator.count|pluralize:"wycieczkę,wycieczki,wycieczek" }}
+                    {% if request.LANGUAGE_CODE == "pl" %}
+                        Znaleziono {{ trips.paginator.count }}
+                        {{ trips.paginator.count|pluralize:"wycieczkę,wycieczki,wycieczek" }}
+                    {% else %}
+                        Found {{ trips.paginator.count }} trips
+                    {% endif %}
                 </h2>
             {% endif %}
 
@@ -262,11 +266,17 @@
                             {% endwith %}
 
                             <div class="card-body trip-tile">
-                                <h3 class="mb-2 trip-title">{{ trip.title }}</h3>
+                                <h3 class="mb-2 trip-title">
+                                    {% if request.LANGUAGE_CODE == "pl" %}
+                                        {{ trip.title_pl|default:trip.title_en }}
+                                    {% else %}
+                                        {{ trip.title_en|default:trip.title_pl }}
+                                    {% endif %}
+                                </h3>
                                 <p class="text-muted mb-4">{{ trip.country }}, {{ trip.location }}</p>
 
                                 <h4 class="mt-3 fw-bold text-price">
-                                    {{ trip.price }} {{ trip.get_currency_symbol }}
+                                    {{ trip.get_price_display }}
                                 </h4>
 
                                <p class="text-muted small mb-2">
@@ -281,10 +291,10 @@
                 <div class="col-12 text-center">
                     {% if request.GET.search %}
                         <p>
-                            Brak wyników dla "<strong>{{ request.GET.search }}</strong>"
+                            {% t "Brak wyników dla" "No results for" %} "<strong>{{ request.GET.search }}</strong>"
                         </p>
                     {% else %}
-                        <p>No trips available</p>
+                        <p>{% t "Brak dostępnych wycieczek" "No trips available" %}</p>
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -295,7 +305,7 @@
 
                 {% if trips.has_previous %}
                     <a href="?{{ request.GET.urlencode }}&page={{ trips.previous_page_number }}" class="btn btn-outline-primary me-2">
-                        Previous
+                        {% t "Poprzednia" "Previous" %}
                     </a>
                 {% endif %}
 
@@ -312,7 +322,7 @@
 
                 {% if trips.has_next %}
                     <a href="?{{ request.GET.urlencode }}&page={{ trips.next_page_number }}" class="btn btn-outline-primary ms-2">
-                        Next
+                        {% t "Następna" "Next" %}
                     </a>
                 {% endif %}
 

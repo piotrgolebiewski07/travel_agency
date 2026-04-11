@@ -46,11 +46,17 @@
                         <div class="card-img-overlay d-flex flex-column justify-content-end"
                              style="background: rgba(0,0,0,0.4);">
 
-                            <h4>{{ trip.title }}</h4>
+                            <h4>
+                                {% if request.LANGUAGE_CODE == "pl" %}
+                                    {{ trip.title_pl|default:trip.title_en }}
+                                {% else %}
+                                    {{ trip.title_en|default:trip.title_pl }}
+                                {% endif %}
+                            </h4>
                             <p class="mb-1">{{ trip.country }}, {{ trip.location }}</p>
 
                             <strong class="mt-1">
-                                {{ trip.price }} {{ trip.get_currency_symbol }}
+                                {{ trip.get_price_display }}
                             </strong>
 
                         </div>
