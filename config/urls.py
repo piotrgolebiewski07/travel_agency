@@ -32,7 +32,9 @@ urlpatterns = [
     path('trips/', include('trips.urls')),
     path('api/', include('trips.api_urls')),
     path('i18n/', include('django.conf.urls.i18n')),
-    path("accounts/", include("django.contrib.auth.urls")),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('contact/', views.contact, name='contact'),
+    path('thanks/', views.thanks, name='thanks'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
