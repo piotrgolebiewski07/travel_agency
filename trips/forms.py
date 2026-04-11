@@ -23,3 +23,32 @@ class ReviewForm(forms.ModelForm):
             raise forms.ValidationError("Rating must be between 1 and 5")
 
         return rating
+
+
+class ContactForm(forms.Form):
+    your_name = forms.CharField(
+        label="Name",
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "style": "max-width: 400px;"
+        })
+    )
+
+    your_email = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={
+            "class": "form-control",
+            "style": "max-width: 400px;"
+        })
+    )
+
+    your_message = forms.CharField(
+        label="Message",
+        max_length=1000,
+        widget=forms.Textarea(attrs={
+            "class": "form-control",
+            "style": "max-width: 800px; max-height: 200px;"
+        })
+    )
+
