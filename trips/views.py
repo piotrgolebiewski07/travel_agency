@@ -16,49 +16,11 @@ from .serializers import TripSerializer
 from .forms import ReviewForm, ContactForm
 
 
-class TripViewSet(ModelViewSet):
-    serializer_class = TripSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
-    filterset_fields = {
-        "price": ["gte", "lte"],
-        "country": ["exact"],
-        "start_date": ["gte", "lte"],
-        "available": ["exact"],
-    }
-    ordering_fields = ["price", "avg_rating", "reviews_count", "start_date"]
-    search_fields = ["title_pl", "title_en", "country", "location", "description_pl", "description_en"]
-
-    def get_queryset(self):
-        queryset = Trip.objects.annotate(
-            avg_rating=Avg("reviews__rating"),
-            reviews_count=Count("reviews")
-        ).order_by("start_date")
-
-        min_rating = self.request.query_params.get("min_rating")
-
-        if min_rating:
-            queryset = queryset.filter(avg_rating__gte=float(min_rating))
-
-        return queryset
-
-
-def home(request):
-    trips = Trip.objects.all().annotate(
-        avg_rating=Avg("reviews__rating"),
-        reviews_count=Count("reviews")
-    ).order_by("start_date")[:3]
-
-    return render(request, "home.html", {"trips": trips})
-
-
-def index(request):
+def get_filtered_trips(request):
     trips = Trip.objects.prefetch_related("images", "reviews").annotate(
         avg_rating=Avg("reviews__rating"),
         reviews_count=Count("reviews")
-    ).order_by("start_date")
-
-    locations = Trip.objects.values_list("location", flat=True).distinct().order_by("location")
-    countries = Trip.objects.values_list("country", flat=True).distinct().order_by("country")
+    )
 
     country = request.GET.get("country")
     location = request.GET.get("location")
@@ -115,6 +77,40 @@ def index(request):
         trips = trips.order_by("start_date")
     elif sort == "end_date":
         trips = trips.order_by("-end_date")
+
+    return trips
+
+
+class TripViewSet(ModelViewSet):
+    serializer_class = TripSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    filterset_fields = {
+        "price": ["gte", "lte"],
+        "country": ["exact"],
+        "start_date": ["gte", "lte"],
+        "available": ["exact"],
+    }
+    ordering_fields = ["price", "avg_rating", "reviews_count", "start_date"]
+    search_fields = ["title_pl", "title_en", "country", "location", "description_pl", "description_en"]
+
+    def get_queryset(self):
+        return get_filtered_trips(self.request)
+
+
+def home(request):
+    trips = Trip.objects.all().annotate(
+        avg_rating=Avg("reviews__rating"),
+        reviews_count=Count("reviews")
+    ).order_by("start_date")[:3]
+
+    return render(request, "home.html", {"trips": trips})
+
+
+def index(request):
+    trips = get_filtered_trips(request).order_by("start_date")
+
+    locations = Trip.objects.values_list("location", flat=True).distinct().order_by("location")
+    countries = Trip.objects.values_list("country", flat=True).distinct().order_by("country")
 
     paginator = Paginator(trips, 5)  # 5 trips na stronę
     page_number = request.GET.get("page")
@@ -182,3 +178,4 @@ def contact(request):
 
 def thanks(request):
     return render(request, "thanks.html")
+
