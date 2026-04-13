@@ -26,7 +26,7 @@ class TripViewSet(ModelViewSet):
         "available": ["exact"],
     }
     ordering_fields = ["price", "avg_rating", "reviews_count", "start_date"]
-    search_fields = ["title", "country", "location", "description"]
+    search_fields = ["title_pl", "title_en", "country", "location", "description_pl", "description_en"]
 
     def get_queryset(self):
         queryset = Trip.objects.annotate(
@@ -97,10 +97,12 @@ def index(request):
 
     if search:
         trips = trips.filter(
-            Q(title__icontains=search) |
+            Q(title_pl__icontains=search) |
+            Q(title_en__icontains=search) |
             Q(country__icontains=search) |
             Q(location__icontains=search) |
-            Q(description__icontains=search)
+            Q(description_pl__icontains=search) |
+            Q(description_en__icontains=search)
         ).distinct().order_by("-start_date")
 
     if sort == "price_asc":
