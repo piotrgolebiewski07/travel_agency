@@ -7,7 +7,122 @@
 {% block content %}
 
 <div class="container">
-    <div class="row">
+
+    <div class="bg-white p-3 shadow mt-4" style="border-radius: 50px; border: 3px solid #343a40;">
+        <form method="get"
+              class="d-flex flex-wrap justify-content-center align-items-end gap-5 mb-3">
+
+            <!-- GROUP: PEOPLE -->
+            <div class="text-center d-flex flex-column justify-content-end">
+                <small class="text-muted d-block mb-2">Liczba osób</small>
+                <div class="d-flex gap-2 justify-content-center align-items-end">
+
+                    <div style="width: 100px;">
+                        <label class="d-block text-center" style="font-size: 14px;">Dorośli</label>
+                        <input type="number" name="adults"
+                               value="{{ request.GET.adults|default:1 }}"
+                               min="1"
+                               class="form-control text-center custom-input">
+                    </div>
+
+                    <div style="width: 100px;">
+                        <label class="d-block text-center" style="font-size: 14px;">Dzieci</label>
+                        <input type="number" name="children"
+                               value="{{ request.GET.children|default:0 }}"
+                               min="0"
+                               class="form-control text-center custom-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 👇 GROUP: DAYS -->
+            <div class="text-center d-flex flex-column justify-content-end">
+                <small class="text-muted d-block mb-2">Długość pobytu</small>
+
+                <div class="d-flex gap-2 justify-content-center align-items-end">
+
+                    <div style="width: 100px;">
+                        <label class="d-block text-center" style="font-size: 14px;">Min dni</label>
+                        <input type="number" name="min_days"
+                               value="{{ request.GET.min_days }}"
+                               min="1"
+                               class="form-control text-center custom-input">
+                    </div>
+
+                    <div style="width: 100px;">
+                        <label class="d-block text-center" style="font-size: 14px;">Max dni</label>
+                        <input type="number" name="max_days"
+                               value="{{ request.GET.max_days }}"
+                               min="1"
+                               class="form-control text-center custom-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 👇 GROUP: SORT -->
+            <div class="text-center d-flex flex-column justify-content-end">
+                <small class="text-muted d-block mb-2">Sortowanie</small>
+
+                <div class="mx-auto" style="width: 220px;">
+                    <label class="d-block text-center invisible" style="font-size: 14px;">Sort</label>
+
+                    <input type="hidden" name="country" value="{{ request.GET.country }}">
+                    <input type="hidden" name="location" value="{{ request.GET.location }}">
+                    <input type="hidden" name="min_price" value="{{ request.GET.min_price }}">
+                    <input type="hidden" name="max_price" value="{{ request.GET.max_price }}">
+                    <input type="hidden" name="start_date" value="{{ request.GET.start_date }}">
+                    <input type="hidden" name="end_date" value="{{ request.GET.end_date }}">
+                    <input type="hidden" name="available" value="{{ request.GET.available }}">
+                    <input type="hidden" name="min_rating" value="{{ request.GET.min_rating }}">
+
+                    <select name="sort"
+                        class="form-select text-center"
+                        style="
+                            width: 220px;
+                            background-color: #edf6ff;
+                            border: 2px solid #84a3d6;
+                        ">
+                        <option value="">{% t "Sortuj" "Sort" %}</option>
+
+                        <option value="price_asc"
+                            {% if request.GET.sort == "price_asc" %}selected{% endif %}>
+                            {% t "Cena rosnąco" "Price ascending" %}
+                        </option>
+
+                        <option value="price_desc"
+                            {% if request.GET.sort == "price_desc" %}selected{% endif %}>
+                            {% t "Cena malejąco" "Price descending" %}
+                        </option>
+
+                        <option value="rating"
+                            {% if request.GET.sort == "rating" %}selected{% endif %}>
+                            {% t "Najlepiej oceniane" "Top rated" %}
+                        </option>
+
+                        <option value="start_date"
+                            {% if request.GET.sort == "start_date" %}selected{% endif %}>
+                            {% t "Od najbliższego" "Closest first" %}
+                        </option>
+
+                        <option value="end_date"
+                            {% if request.GET.sort == "end_date" %}selected{% endif %}>
+                            {% t "Od ostatniego" "Latest first" %}
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="text-center d-flex flex-column justify-content-end">
+                <small class="text-muted d-block mb-2"></small>
+                <label class="invisible d-block">Szukaj</label>
+
+                <button class="btn btn-primary px-4">
+                    {% t "Szukaj" "Search" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row mt-4">
 
         <!-- SIDEBAR -->
         <div class="col-md-3">
@@ -63,8 +178,7 @@
                     <div class="mb-2">
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="min_rating" value=""
-                                   id="rating-any"
+                            <input class="form-check-input" type="radio" name="min_rating" value="" id="rating-any"
                                    {% if not request.GET.min_rating %}checked{% endif %}>
                             <label class="form-check-label" for="rating-any">
                                 {% t "Dowolna" "Any" %}
@@ -72,8 +186,7 @@
                         </div>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="min_rating" value="5"
-                                   id="rating-5"
+                            <input class="form-check-input" type="radio" name="min_rating" value="5" id="rating-5"
                                    {% if request.GET.min_rating == "5" %}checked{% endif %}>
                             <label class="form-check-label d-flex align-items-center" for="rating-5">
                                 <span class="stars">★★★★★</span>
@@ -164,63 +277,13 @@
 
         <!-- RESULTS -->
         <div class="col-md-9">
-            <form method="get" class="d-flex justify-content-center align-items-center gap-3 mb-3">
-                <input type="hidden" name="country" value="{{ request.GET.country }}">
-                <input type="hidden" name="location" value="{{ request.GET.location }}">
-                <input type="hidden" name="min_price" value="{{ request.GET.min_price }}">
-                <input type="hidden" name="max_price" value="{{ request.GET.max_price }}">
-                <input type="hidden" name="start_date" value="{{ request.GET.start_date }}">
-                <input type="hidden" name="end_date" value="{{ request.GET.end_date }}">
-                <input type="hidden" name="available" value="{{ request.GET.available }}">
-                <input type="hidden" name="min_rating" value="{{ request.GET.min_rating }}">
-                <input type="text"
-                   name="search"
-                   class="form-control custom-search"
-                   placeholder="{% t '🔍 Szukaj wycieczek...' '🔍 Search trips...' %}"
-                   value="{{ request.GET.search }}"
-                   style="width: 280px;">
-
-                <select name="sort" class="form-select rounded-pill" style="width: 180px;">
-                    <option value="">{% t "Sortuj" "Sort" %}</option>
-
-                    <option value="price_asc"
-                        {% if request.GET.sort == "price_asc" %}selected{% endif %}>
-                        {% t "Cena rosnąco" "Price ascending" %}
-                    </option>
-
-                    <option value="price_desc"
-                        {% if request.GET.sort == "price_desc" %}selected{% endif %}>
-                        {% t "Cena malejąco" "Price descending" %}
-                    </option>
-
-                    <option value="rating"
-                        {% if request.GET.sort == "rating" %}selected{% endif %}>
-                        {% t "Najlepiej oceniane" "Top rated" %}
-                    </option>
-
-                    <option value="start_date"
-                        {% if request.GET.sort == "start_date" %}selected{% endif %}>
-                        {% t "Od najbliższego" "Closest first" %}
-                    </option>
-
-                    <option value="end_date"
-                        {% if request.GET.sort == "end_date" %}selected{% endif %}>
-                        {% t "Od ostatniego" "Latest first" %}
-                    </option>
-                </select>
-
-                <button class="btn btn-primary rounded-pill px-4">
-                    OK
-                </button>
-
-            </form>
 
             {% if request.GET.search %}
-                <h2 class="mb-4 text-center">
+                <h2 class="mt-4 mb-4 text-center">
                     {% t "Wyniki dla" "Results for" %} "{{ request.GET.search }}"
                 </h2>
             {% else %}
-                <h2 class="mb-4 text-center">
+                <h2 class="mt-4 mb-4 text-center">
                     {% if request.LANGUAGE_CODE == "pl" %}
                         Znaleziono {{ trips.paginator.count }}
                         {{ trips.paginator.count|pluralize:"wycieczkę,wycieczki,wycieczek" }}
@@ -309,7 +372,7 @@
                     </a>
                 {% endif %}
 
-                <!-- NUMERY STRON -->
+                <!-- PAGE NUMBERS -->
                 {% for num in trips.paginator.page_range %}
                     {% if trips.number == num %}
                         <span class="btn btn-primary mx-1">{{ num }}</span>
@@ -338,8 +401,4 @@
     </div>
 </div>
 {% endblock %}
-
-
-
-
 

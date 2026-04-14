@@ -20,12 +20,21 @@
     <div class="container-fluid d-flex justify-content-between align-items-center">
 
         <!-- LEFT -->
-        <div class="navbar-nav d-flex flex-row gap-3">
+        <div class="navbar-nav d-flex flex-row gap-3 align-items-center">
             <a class="nav-link text-white" href="/">{% t "Strona główna" "Home" %}</a>
             <a class="nav-link text-white" href="/trips/">{% t "Wycieczki" "Trips" %}</a>
             <a class="nav-link text-white" href="/contact/">{% t "Kontakt" "Contact" %}</a>
-        </div>
 
+            <!-- 🔍 SEARCH -->
+            <form method="get" action="{% url 'index' %}" class="ms-3">
+                <input type="text"
+                       name="search"
+                       class="form-control form-control-sm"
+                       placeholder="🔍 Szukaj..."
+                       value="{{ request.GET.search }}"
+                       style="width: 200px;">
+            </form>
+        </div>
         <!-- RIGHT -->
         <div class="d-flex gap-2 align-items-center">
 
@@ -59,9 +68,15 @@
 </nav>
 
 <!-- HERO -->
-<div class="bg-dark text-white text-center py-2 mb-2">
-    <h1 class="display-4">{% t "Odkrywaj świat" "Explore the world" %}</h1>
-    <p class="lead">{% t "Wyrusz w swoją kolejną przygodę" "Find your next adventure" %}</p>
+<div class="text-white text-center py-5 mb-0"
+     style="
+        background-image: url('/static/images/travel_background.jpg');
+        background-size: cover;
+        background-position: center;
+     ">
+    <div style="background: rgba(0,0,0,0.5); padding: 80px 0px;">
+        <h1 class="display-4">{% t "Odkryj świat z nami" "Discover the world with us" %}</h1>
+    </div>
 </div>
 
 {% block content %}
