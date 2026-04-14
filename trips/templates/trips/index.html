@@ -14,11 +14,11 @@
 
             <!-- GROUP: PEOPLE -->
             <div class="text-center d-flex flex-column justify-content-end">
-                <small class="text-muted d-block mb-2">Liczba osób</small>
+                <small class="text-muted d-block mb-2">{% t "Liczba osób" "Number of people" %}</small>
                 <div class="d-flex gap-2 justify-content-center align-items-end">
 
                     <div style="width: 100px;">
-                        <label class="d-block text-center" style="font-size: 14px;">Dorośli</label>
+                        <label class="d-block text-center" style="font-size: 14px;">{% t "Dorośli" "Adults" %}</label>
                         <input type="number" name="adults"
                                value="{{ request.GET.adults|default:1 }}"
                                min="1"
@@ -26,7 +26,7 @@
                     </div>
 
                     <div style="width: 100px;">
-                        <label class="d-block text-center" style="font-size: 14px;">Dzieci</label>
+                        <label class="d-block text-center" style="font-size: 14px;">{% t "Dzieci" "Children" %}</label>
                         <input type="number" name="children"
                                value="{{ request.GET.children|default:0 }}"
                                min="0"
@@ -37,12 +37,12 @@
 
             <!-- 👇 GROUP: DAYS -->
             <div class="text-center d-flex flex-column justify-content-end">
-                <small class="text-muted d-block mb-2">Długość pobytu</small>
+                <small class="text-muted d-block mb-2">{% t "Długość pobytu" "Duration" %}</small>
 
                 <div class="d-flex gap-2 justify-content-center align-items-end">
 
                     <div style="width: 100px;">
-                        <label class="d-block text-center" style="font-size: 14px;">Min dni</label>
+                        <label class="d-block text-center" style="font-size: 14px;">{% t "Min dni" "Min days" %}</label>
                         <input type="number" name="min_days"
                                value="{{ request.GET.min_days }}"
                                min="1"
@@ -50,7 +50,7 @@
                     </div>
 
                     <div style="width: 100px;">
-                        <label class="d-block text-center" style="font-size: 14px;">Max dni</label>
+                        <label class="d-block text-center" style="font-size: 14px;">{% t "Max dni" "Max days" %}</label>
                         <input type="number" name="max_days"
                                value="{{ request.GET.max_days }}"
                                min="1"
@@ -61,7 +61,7 @@
 
             <!-- 👇 GROUP: SORT -->
             <div class="text-center d-flex flex-column justify-content-end">
-                <small class="text-muted d-block mb-2">Sortowanie</small>
+                <small class="text-muted d-block mb-2">{% t "Sortowanie" "Sort by" %}</small>
 
                 <div class="mx-auto" style="width: 220px;">
                     <label class="d-block text-center invisible" style="font-size: 14px;">Sort</label>
