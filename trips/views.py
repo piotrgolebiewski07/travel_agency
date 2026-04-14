@@ -109,7 +109,7 @@ def home(request):
 
 
 def index(request):
-    trips = get_filtered_trips(request).order_by("start_date")
+    trips = get_filtered_trips(request)
 
     locations = Trip.objects.values_list("location", flat=True).distinct().order_by("location")
     countries = Trip.objects.values_list("country", flat=True).distinct().order_by("country")
