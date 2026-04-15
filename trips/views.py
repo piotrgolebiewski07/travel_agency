@@ -35,6 +35,10 @@ def get_filtered_trips(request):
     search = request.GET.get("search")
     sort = request.GET.get("sort")
 
+    adults = int(request.GET.get("adults") or 1)
+    children = int(request.GET.get("children") or 0)
+    total_people = adults + children
+
     if country:
         trips = trips.filter(country=country)
 
@@ -79,6 +83,9 @@ def get_filtered_trips(request):
         trips = trips.order_by("start_date")
     elif sort == "end_date":
         trips = trips.order_by("-end_date")
+
+    if total_people > 0:
+        trips = trips.filter(max_people__gte=total_people)
 
     return trips
 
