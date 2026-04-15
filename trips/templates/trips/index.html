@@ -12,6 +12,8 @@
         <form method="get"
               class="d-flex flex-wrap justify-content-center align-items-end gap-5 mb-3">
 
+            <input type="hidden" name="price_type" value="{{ request.GET.price_type|default:'person' }}">
+
             <!-- GROUP: PEOPLE -->
             <div class="text-center d-flex flex-column justify-content-end">
                 <small class="text-muted d-block mb-2">{% t "Liczba osób" "Number of people" %}</small>
@@ -133,6 +135,28 @@
                     <input type="hidden" name="sort" value="{{ request.GET.sort }}">
                     <h5 class="mb-3">{% t "Filtry" "Filters" %}</h5>
 
+                    <!-- Price type selector -->
+                    <input type="hidden" name="adults" value="{{ request.GET.adults }}">
+                    <input type="hidden" name="children" value="{{ request.GET.children }}">
+                    <label class="form-label">{% t "Cena" "Price" %}</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="price_type" id="price-person" value="person"
+                                {% if request.GET.price_type != "total" %}checked{% endif %}>
+                        <label class="form-check-label" for="price-person">
+                            {% t "za osobę" "per person" %}
+                        </label>
+
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="price_type" id="price-total" value="total"
+                                {% if request.GET.price_type == "total" %}checked{% endif %}>
+                        <label class="form-check-label" for="price-total">
+                            {% t "za wszystkich" "total price" %}
+                        </label>
+                    </div>
+
+                    <!-- Country selector -->
                     <label class="form-label">{% t "Kraj" "Country" %}</label>
                     <select name="country" class="form-select mb-2">
                         <option value="">{% t "Wszystkie kraje" "All countries" %}</option>
@@ -144,6 +168,7 @@
                         {% endfor %}
                     </select>
 
+                    <!-- Location selector -->
                     <label class="form-label">{% t "Lokalizacja" "Location" %}</label>
                     <select name="location" class="form-select mb-2">
                         <option value="">{% t "Wszystkie lokalizacje" "All locations" %}</option>
@@ -155,6 +180,7 @@
                         {% endfor %}
                     </select>
 
+                    <!-- Price range -->
                     <label class="form-label">{% t "Cena od" "Min price" %}</label>
                     <input type="number"
                            name="min_price"
@@ -173,8 +199,8 @@
 
                     <hr class="my-3">
 
+                    <!-- Tripadvisor rating -->
                     <label class="form-label">{% t "Ocena Tripadvisor" "Tripadvisor rating" %}</label>
-
                     <div class="mb-2">
 
                         <div class="form-check">
@@ -238,6 +264,7 @@
 
                     <hr class="my-3">
 
+                    <!-- Trip start and end date -->
                     <label class="form-label">{% t "Data rozpoczęcia" "Start date" %}</label>
                     <input type="date"
                            name="start_date"
@@ -250,6 +277,7 @@
                            value="{{ request.GET.end_date }}"
                            class="form-control mb-2">
 
+                    <!-- Only available -->
                     <div class="form-check mb-2">
                         <input class="form-check-input"
                                type="checkbox"
@@ -338,9 +366,15 @@
                                 </h3>
                                 <p class="text-muted mb-4">{{ trip.country }}, {{ trip.location }}</p>
 
-                                <h4 class="mt-3 fw-bold text-price">
-                                    {{ trip.get_price_display }}
-                                </h4>
+                                {% if price_type == "total" %}
+                                    <h4 class="mt-3 fw-bold text-price">
+                                        {{ trip.total_price_display }}
+                                    </h4>
+                                {% else %}
+                                    <h4 class="mt-3 fw-bold text-price">
+                                        {{ trip.get_price_display }}
+                                    </h4>
+                                {% endif %}
 
                                <p class="text-muted small mb-2">
                                     {{ trip.start_date|date:"d.m.Y" }} → {{ trip.end_date|date:"d.m.Y" }}

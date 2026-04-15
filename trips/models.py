@@ -30,6 +30,25 @@ class Trip(models.Model):
 
         return f"{int(self.price)} €"
 
+    def calculate_total_price(self, adults, children):
+        adults = int(adults or 0)
+        children = int(children or 0)
+
+        total = (adults * self.price + children * self.price * Decimal("0.8"))
+
+        return int(total)
+
+    def get_total_price_display(self, adults, children):
+        total = self.calculate_total_price(adults, children)
+        lang = translation.get_language()
+
+        if lang == "pl":
+            if self.currency == "EUR":
+                return f"{int(total * Decimal('4.26'))} zł"
+            return f"{int(total)} zł"
+
+        return f"{int(total)} €"
+
 
 class TripImage(models.Model):
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="images")  # delete images when Trip is deleted
