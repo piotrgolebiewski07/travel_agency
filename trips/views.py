@@ -118,13 +118,27 @@ def index(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
+    adults = int(request.GET.get("adults") or 1)
+    children = int(request.GET.get("children") or 0)
+    total_people = adults + children
+
+    if total_people == 0:
+        total_people = 1
+
+    price_type = request.GET.get("price_type", "person")
+
+    for trip in page_obj:
+        trip.total_price_display = trip.get_total_price_display(adults, children)
+
     if settings.DEBUG:
         print("SQL queries:", len(connection.queries))
 
     return render(request, "trips/index.html", {
         "trips": page_obj,
         "locations": locations,
-        "countries": countries
+        "countries": countries,
+        "total_people": total_people,
+        "price_type": price_type
     })
 
 
