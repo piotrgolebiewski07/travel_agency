@@ -55,7 +55,7 @@
 
             <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2">
                 {% csrf_token %}
-                <input name="next" type="hidden" value="{{ request.path }}">
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
 
                 <button name="language" value="pl" class="btn btn-sm btn-light">PL</button>
                 <button name="language" value="en" class="btn btn-sm btn-light">EN</button>

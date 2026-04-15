@@ -12,6 +12,8 @@
         <form method="get"
               class="d-flex flex-wrap justify-content-center align-items-end gap-5 mb-3">
 
+            <input type="hidden" name="price_type" value="{{ request.GET.price_type|default:'person' }}">
+
             <!-- GROUP: PEOPLE -->
             <div class="text-center d-flex flex-column justify-content-end">
                 <small class="text-muted d-block mb-2">{% t "Liczba osób" "Number of people" %}</small>
@@ -138,18 +140,18 @@
                     <input type="hidden" name="children" value="{{ request.GET.children }}">
                     <label class="form-label">{% t "Cena" "Price" %}</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="price_type" value="person"
+                        <input class="form-check-input" type="radio" name="price_type" id="price-person" value="person"
                                 {% if request.GET.price_type != "total" %}checked{% endif %}>
-                        <label class="form-check-label">
+                        <label class="form-check-label" for="price-person">
                             {% t "za osobę" "per person" %}
                         </label>
 
                     </div>
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="price_type" value="total"
+                        <input class="form-check-input" type="radio" name="price_type" id="price-total" value="total"
                                 {% if request.GET.price_type == "total" %}checked{% endif %}>
-                        <label class="form-check-label">
+                        <label class="form-check-label" for="price-total">
                             {% t "za wszystkich" "total price" %}
                         </label>
                     </div>
