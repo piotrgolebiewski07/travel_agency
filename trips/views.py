@@ -18,6 +18,26 @@ from .serializers import TripSerializer
 from .forms import ReviewForm, ContactForm
 
 
+def normalize_guests(request):
+    adults = int(request.GET.get("adults") or 1)
+    children = int(request.GET.get("children") or 0)
+
+    if adults < 1:
+        adults = 1
+
+    if children < 0:
+        children = 0
+
+    if adults > 8:
+        adults = 8
+        children = 0
+    elif adults + children > 8:
+        children = 8 - adults
+
+    total_people = adults + children
+    return adults, children, total_people
+
+
 def get_filtered_trips(request):
     trips = Trip.objects.prefetch_related("images", "reviews").annotate(
         avg_rating=Avg("reviews__rating"),
@@ -35,9 +55,7 @@ def get_filtered_trips(request):
     search = request.GET.get("search")
     sort = request.GET.get("sort")
 
-    adults = int(request.GET.get("adults") or 1)
-    children = int(request.GET.get("children") or 0)
-    total_people = adults + children
+    adults, children, total_people = normalize_guests(request)
 
     if country:
         trips = trips.filter(country=country)
@@ -125,14 +143,14 @@ def index(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    adults = int(request.GET.get("adults") or 1)
-    children = int(request.GET.get("children") or 0)
-    total_people = adults + children
-
-    if total_people == 0:
-        total_people = 1
+    adults, children, total_people = normalize_guests(request)
 
     price_type = request.GET.get("price_type", "person")
+
+    raw_adults = int(request.GET.get("adults") or 1)
+    raw_children = int(request.GET.get("children") or 0)
+
+    limit_exceeded = (raw_adults + raw_children) > 8
 
     for trip in page_obj:
         trip.total_price_display = trip.get_total_price_display(adults, children)
@@ -145,7 +163,10 @@ def index(request):
         "locations": locations,
         "countries": countries,
         "total_people": total_people,
-        "price_type": price_type
+        "price_type": price_type,
+        "adults": adults,
+        "children": children,
+        "limit_exceeded": limit_exceeded,
     })
 
 

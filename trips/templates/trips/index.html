@@ -22,7 +22,7 @@
                     <div style="width: 100px;">
                         <label class="d-block text-center" style="font-size: 14px;">{% t "Dorośli" "Adults" %}</label>
                         <input type="number" name="adults"
-                               value="{{ request.GET.adults|default:1 }}"
+                               value="{{ adults }}"
                                min="1"
                                class="form-control text-center custom-input">
                     </div>
@@ -30,7 +30,7 @@
                     <div style="width: 100px;">
                         <label class="d-block text-center" style="font-size: 14px;">{% t "Dzieci" "Children" %}</label>
                         <input type="number" name="children"
-                               value="{{ request.GET.children|default:0 }}"
+                               value="{{ children }}"
                                min="0"
                                class="form-control text-center custom-input">
                     </div>
@@ -136,8 +136,8 @@
                     <h5 class="mb-3">{% t "Filtry" "Filters" %}</h5>
 
                     <!-- Price type selector -->
-                    <input type="hidden" name="adults" value="{{ request.GET.adults }}">
-                    <input type="hidden" name="children" value="{{ request.GET.children }}">
+                    <input type="hidden" name="adults" value="{{ adults }}">
+                    <input type="hidden" name="children" value="{{ children }}">
                     <label class="form-label">{% t "Cena" "Price" %}</label>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="price_type" id="price-person" value="person"
@@ -319,6 +319,12 @@
                         Found {{ trips.paginator.count }} trips
                     {% endif %}
                 </h2>
+            {% endif %}
+
+            {% if limit_exceeded %}
+                <p class="text-center text-warning mb-3">
+                    {% t "Maksymalnie 8 osób" "Maximum 8 guests" %}
+                </p>
             {% endif %}
 
             <div class="row">
