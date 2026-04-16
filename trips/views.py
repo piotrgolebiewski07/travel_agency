@@ -201,18 +201,23 @@ def trip_detail(request, pk):
     adults = int(request.GET.get("adults") or 1)
     children = int(request.GET.get("children") or 0)
 
+    raw_adults = int(request.GET.get("adults") or 1)
+    raw_children = int(request.GET.get("children") or 0)
+
     if adults < 1:
         adults = 1
 
     if children < 0:
         children = 0
 
-    if adults > trip.max_people:
-        adults = trip.max_people
+    max_allowed = min(trip.max_people, 8)
+
+    if adults > max_allowed:
+        adults = max_allowed
         children = 0
 
-    elif adults + children > trip.max_people:
-        children = trip.max_people - adults
+    elif adults + children > max_allowed:
+        children = max_allowed - adults
 
     total_price = trip.get_total_price_display(adults, children)
 
@@ -230,12 +235,16 @@ def trip_detail(request, pk):
     else:
         form = ReviewForm()
 
+    limit_exceeded = (raw_adults + raw_children) > max_allowed
+
     return render(request, "trips/detail.html", {
         "trip": trip,
         "form": form,
         "total_price": total_price,
         "adults": adults,
         "children": children,
+        "max_allowed": max_allowed,
+        "limit_exceeded": limit_exceeded,
     })
 
 
