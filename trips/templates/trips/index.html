@@ -382,8 +382,9 @@
                                     </h4>
                                 {% endif %}
 
-                               <p class="text-muted small mb-2">
+                                <p class="text-muted small mb-2">
                                     {{ trip.start_date|date:"d.m.Y" }} → {{ trip.end_date|date:"d.m.Y" }}
+                                    ({{ trip.duration_days }} {% t "dni" "days" %})
                                 </p>
                             </div>
 

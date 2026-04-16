@@ -168,6 +168,7 @@ def index(request):
 
     for trip in page_obj:
         trip.total_price_display = trip.get_total_price_display(adults, children)
+        trip.duration_days = trip.duration.days
 
     if settings.DEBUG:
         print("SQL queries:", len(connection.queries))
