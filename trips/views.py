@@ -1,9 +1,10 @@
 # 1. Standard library
+from datetime import timedelta
 
 # 2. Django
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from django.db.models import Avg, Count, Q
+from django.db.models import Avg, Count, Q, F, ExpressionWrapper, DurationField
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import connection
 from django.conf import settings
@@ -41,7 +42,11 @@ def normalize_guests(request):
 def get_filtered_trips(request):
     trips = Trip.objects.prefetch_related("images", "reviews").annotate(
         avg_rating=Avg("reviews__rating"),
-        reviews_count=Count("reviews")
+        reviews_count=Count("reviews"),
+        duration=ExpressionWrapper(
+            F("end_date") - F("start_date") + timedelta(days=1),
+            output_field=DurationField()
+        )
     )
 
     country = request.GET.get("country")
@@ -56,6 +61,9 @@ def get_filtered_trips(request):
     sort = request.GET.get("sort")
 
     adults, children, total_people = normalize_guests(request)
+
+    min_days = safe_float(request.GET.get("min_days"))
+    max_days = safe_float(request.GET.get("max_days"))
 
     if country:
         trips = trips.filter(country=country)
@@ -104,6 +112,12 @@ def get_filtered_trips(request):
 
     if total_people > 0:
         trips = trips.filter(max_people__gte=total_people)
+
+    if min_days is not None:
+        trips = trips.filter(duration__gte=timedelta(days=min_days))
+
+    if max_days is not None:
+        trips = trips.filter(duration__lte=timedelta(days=max_days))
 
     return trips
 
