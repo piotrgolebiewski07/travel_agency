@@ -141,8 +141,15 @@ class TripViewSet(ModelViewSet):
 def home(request):
     trips = Trip.objects.all().annotate(
         avg_rating=Avg("reviews__rating"),
-        reviews_count=Count("reviews")
+        reviews_count=Count("reviews"),
+        duration=ExpressionWrapper(
+            F("end_date") - F("start_date") + timedelta(days=1),
+            output_field=DurationField()
+        )
     ).order_by("start_date")[:3]
+
+    for trip in trips:
+        trip.duration_days = trip.duration.days
 
     return render(request, "home.html", {"trips": trips})
 
@@ -191,6 +198,24 @@ def trip_detail(request, pk):
         pk=pk
     )
 
+    adults = int(request.GET.get("adults") or 1)
+    children = int(request.GET.get("children") or 0)
+
+    if adults < 1:
+        adults = 1
+
+    if children < 0:
+        children = 0
+
+    if adults > trip.max_people:
+        adults = trip.max_people
+        children = 0
+
+    elif adults + children > trip.max_people:
+        children = trip.max_people - adults
+
+    total_price = trip.get_total_price_display(adults, children)
+
     if request.method == "POST":
         if not request.user.is_authenticated:
             return redirect("login")
@@ -207,7 +232,10 @@ def trip_detail(request, pk):
 
     return render(request, "trips/detail.html", {
         "trip": trip,
-        "form": form
+        "form": form,
+        "total_price": total_price,
+        "adults": adults,
+        "children": children,
     })
 
 

@@ -53,9 +53,14 @@
                                     {{ trip.title_en|default:trip.title_pl }}
                                 {% endif %}
                             </h4>
-                            <p class="mb-1">{{ trip.country }}, {{ trip.location }}</p>
-
-                            <strong class="mt-1">
+                            <p class="mb-3 small text-light">
+                                {{ trip.country }}, {{ trip.location }}
+                                <span class="mx-1">•</span>
+                                <span class="fw-semibold">
+                                    {{ trip.duration_days }} {% t "dni" "days" %}
+                                </span>
+                            </p>
+                           <strong class="mt-1 fs-5">
                                 {{ trip.get_price_display }}
                             </strong>
 
