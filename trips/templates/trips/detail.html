@@ -104,17 +104,32 @@
         <!-- RIGHT -->
         <div class="col-md-4">
             <div class="card p-3 shadow-sm position-sticky" style="top: 20px;">
+                <form method="get">
+                    <p class="trip-location mb-2">
+                        <strong>{{ trip.country }}, {{ trip.location }}</strong>
+                        <a class="badge bg-light text-primary border" href="https://www.google.com/maps?q={{ trip.location }}" target="_blank">
+                            {% t  "Zobacz na mapie" "View on map" %}
+                        </a>
+                    </p>
 
-                <p class="trip-location mb-2">
-                    {{ trip.country }}, {{ trip.location }}
-                    <a class="badge bg-light text-primary border" href="https://www.google.com/maps?q={{ trip.location }}" target="_blank">
-                        {% t  "Zobacz na mapie" "View on map" %}
-                    </a>
-                </p>
+                    <h5 class="text-price mt-4">
+                        {{ total_price }}
+                        <span class="text-muted small">
+                            ({% t "cena całkowita" "total price" %})
+                        </span>
+                    </h5>
 
-                <h4 class="mt-3 fw-bold text-price">
-                    {{ trip.get_price_display }}
-                </h4>
+                    <div class="mt-4">
+                        <label class="form-label">{% t "Liczba osób" "Number of people" %}</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" name="adults" value="{{ adults }}" min="1" max="{{ trip.max_people }}" class="form-control">
+                            <input type="number" name="children" value="{{ children }}" min="0" max="{{ trip.max_people }}" class="form-control">
+                        </div>
+                        <button class="btn btn-outline-primary w-100 mt-3">
+                            {% t "Przelicz cenę" "Recalculate price" %}
+                        </button>
+                    </div>
+                </form>
 
                 <div class="mt-3">
 
@@ -138,9 +153,16 @@
                 </div>
 
                 {% if trip.available %}
-                    <button class="btn btn-primary w-100 mt-3 btn-book">
-                        {% t "Zarezerwuj" "Book now" %}
-                    </button>
+                    <form method="post" class="mt-3">
+                        {% csrf_token %}
+
+                        <input type="hidden" name="adults" value="{{ adults }}">
+                        <input type="hidden" name="children" value="{{ children }}">
+
+                        <button name="booking" value="1" class="btn btn-primary w-100 btn-book">
+                            {% t "Zarezerwuj" "Book now" %}
+                        </button>
+                    </form>
                 {% else %}
                     <span class="text-danger">{% t "Niedostępne" "Not available" %}</span>
                 {% endif %}
