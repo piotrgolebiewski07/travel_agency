@@ -201,6 +201,19 @@ def trip_detail(request, pk):
     adults = int(request.GET.get("adults") or 1)
     children = int(request.GET.get("children") or 0)
 
+    if adults < 1:
+        adults = 1
+
+    if children < 0:
+        children = 0
+
+    if adults > trip.max_people:
+        adults = trip.max_people
+        children = 0
+
+    elif adults + children > trip.max_people:
+        children = trip.max_people - adults
+
     total_price = trip.get_total_price_display(adults, children)
 
     if request.method == "POST":

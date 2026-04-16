@@ -122,8 +122,16 @@
                     <div class="mt-4">
                         <label class="form-label">{% t "Liczba osób" "Number of people" %}</label>
                         <div class="d-flex gap-2">
-                            <input type="number" name="adults" value="{{ adults }}" min="1" max="{{ trip.max_people }}" class="form-control">
-                            <input type="number" name="children" value="{{ children }}" min="0" max="{{ trip.max_people }}" class="form-control">
+                            <input type="number" name="adults"
+                                   value="{{ adults }}"
+                                   min="1"
+                                   max="{{ trip.max_people }}"
+                                   class="form-control">
+                            <input type="number" name="children"
+                                   value="{{ children }}"
+                                   min="0"
+                                   max="{{ trip.max_people|add:'-1' }}"
+                                   class="form-control">
                         </div>
                         <button class="btn btn-outline-primary w-100 mt-3">
                             {% t "Przelicz cenę" "Recalculate price" %}
