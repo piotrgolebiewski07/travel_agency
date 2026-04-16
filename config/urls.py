@@ -35,6 +35,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('contact/', views.contact, name='contact'),
     path('thanks/', views.thanks, name='thanks'),
+    path('booking_confirmation', views.booking_confirmation, name='booking_confirmation'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

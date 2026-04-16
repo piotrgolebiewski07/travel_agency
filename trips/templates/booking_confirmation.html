@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 text-center">
+    <h2 class="mb-4 text-success">
+        ✅ Rezerwacja wstępna przyjęta
+    </h2>
+
+    <p class="lead">
+        Dziękujemy za zainteresowanie ofertą
+    </p>
+
+    <hr class="my-4">
+
+    <h4 class="mb-3">
+        {{ trip.title_pl|default:trip.title_en }}
+    </h4>
+
+    <p class="text-muted">
+        {{ trip.start_date|date:"d.m.Y" }} → {{ trip.end_date|date:"d.m.Y" }}
+    </p>
+
+    <p>
+        Dorośli: {{ adults }}, Dzieci: {{ children }}
+    </p>
+
+    <p class="fw-bold">
+        Cena całkowita: {{ total_price }}
+    </p>
+
+    <hr class="my-4">
+
+    <p class="text-muted">
+        Skontaktujemy się z Tobą w celu potwierdzenia rezerwacji.
+    </p>
+
+    <a href="/" class="btn btn-primary mt-3">
+        Powrót do strony głównej
+    </a>
+</div>
+{% endblock %}

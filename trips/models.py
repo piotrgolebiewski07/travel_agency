@@ -1,6 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.utils import translation
+from django
 
 
 class Trip(models.Model):
@@ -78,4 +79,15 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.email}"
+
+
+class Booking(models.Model):
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    adults = models.IntegerField()
+    children = models.IntegerField()
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.trip} - {self.adults + self.children} people"
 

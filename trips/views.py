@@ -14,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 # 4. Local imports
-from .models import Trip, ContactMessage
+from .models import Trip, ContactMessage, Booking
 from .serializers import TripSerializer
 from .forms import ReviewForm, ContactForm
 
@@ -222,6 +222,37 @@ def trip_detail(request, pk):
     total_price = trip.get_total_price_display(adults, children)
 
     if request.method == "POST":
+
+        # BOOKING
+        if "booking" in request.POST:
+            adults = int(request.POST.get("adults") or 1)
+            children = int(request.POST.get("children") or 0)
+
+            max_allowed = min(trip.max_people, 8)
+
+            if adults < 1:
+                adults = 1
+
+            if children < 0:
+                children = 0
+
+            if adults > max_allowed:
+                adults = max_allowed
+                children = 0
+
+            elif adults + children > max_allowed:
+                children = max_allowed - adults
+
+            total_price = trip.get_total_price_display(adults, children)
+
+            return render(request, "booking_confirmation.html", {
+                "trip": trip,
+                "adults": adults,
+                "children": children,
+                "total_price": total_price,
+            })
+
+        # REVIEW
         if not request.user.is_authenticated:
             return redirect("login")
 
@@ -236,6 +267,17 @@ def trip_detail(request, pk):
         form = ReviewForm()
 
     limit_exceeded = (raw_adults + raw_children) > max_allowed
+
+
+    # Booking
+    raw_total = trip.calculate_total_price(adults, children)
+
+    Booking.objects.create(
+        trip=trip,
+        adults=adults,
+        children=children,
+        total_price=raw_total
+    )
 
     return render(request, "trips/detail.html", {
         "trip": trip,
@@ -277,4 +319,8 @@ def contact(request):
 
 def thanks(request):
     return render(request, "thanks.html")
+
+
+def booking_confirmation(request):
+    return render(request, "booking_confirmation.html")
 
