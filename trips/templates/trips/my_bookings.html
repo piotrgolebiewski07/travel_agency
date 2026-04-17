@@ -35,9 +35,9 @@
                             <p class="mb-2 text-muted">
                                 {% t "Uczestnicy:" "Participants:" %}<br>
                                 <strong>
-                                    {{ booking.adults }} {% if booking.adults == 1 %}dorosły{% else %}dorosłych{% endif %}
+                                    {{ booking.adults }} {% if booking.adults == 1 %}{% t "dorosły" "adult" %}{% else %}{% t "dorosłych" "adults" %}{% endif %}
                                     {% if booking.children %}
-                                        , {{ booking.children }} {% if booking.children == 1 %}dziecko{% else %}dzieci{% endif %}
+                                        , {{ booking.children }} {% if booking.children == 1 %}{% t "dziecko" "child" %}{% else %}{% t "dzieci" "children" %}{% endif %}
                                     {% endif %}
                                 </strong>
                             </p>
@@ -46,7 +46,7 @@
 
                             <p class="mb-1">
                                 {% t "Cena całkowita:" "Total price:" %}
-                                <strong>{{ booking.total_price }} {{ booking.trip.currency }}</strong>
+                                <strong>{{ booking.get_total_price_display }}</strong>
                             </p>
 
 
