@@ -8,13 +8,14 @@ from django.db.models import Avg, Count, Q, F, ExpressionWrapper, DurationField
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import connection
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 # 3. Third-party (DRF)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 # 4. Local imports
-from .models import Trip, ContactMessage
+from .models import Trip, ContactMessage, Booking
 from .serializers import TripSerializer
 from .forms import ReviewForm, ContactForm
 
@@ -201,22 +202,68 @@ def trip_detail(request, pk):
     adults = int(request.GET.get("adults") or 1)
     children = int(request.GET.get("children") or 0)
 
+    raw_adults = int(request.GET.get("adults") or 1)
+    raw_children = int(request.GET.get("children") or 0)
+
     if adults < 1:
         adults = 1
 
     if children < 0:
         children = 0
 
-    if adults > trip.max_people:
-        adults = trip.max_people
+    max_allowed = min(trip.max_people, 8)
+
+    if adults > max_allowed:
+        adults = max_allowed
         children = 0
 
-    elif adults + children > trip.max_people:
-        children = trip.max_people - adults
+    elif adults + children > max_allowed:
+        children = max_allowed - adults
 
     total_price = trip.get_total_price_display(adults, children)
 
     if request.method == "POST":
+
+        # BOOKING
+        if "booking" in request.POST:
+            adults = int(request.POST.get("adults") or 1)
+            children = int(request.POST.get("children") or 0)
+
+            max_allowed = min(trip.max_people, 8)
+
+            if adults < 1:
+                adults = 1
+
+            if children < 0:
+                children = 0
+
+            if adults > max_allowed:
+                adults = max_allowed
+                children = 0
+
+            elif adults + children > max_allowed:
+                children = max_allowed - adults
+
+            raw_total = trip.calculate_total_price(adults, children)
+
+            Booking.objects.create(
+                trip=trip,
+                user=request.user if request.user.is_authenticated else None,
+                adults=adults,
+                children=children,
+                total_price=raw_total
+            )
+
+            total_price = trip.get_total_price_display(adults, children)
+
+            return render(request, "trips/booking_confirmation.html", {
+                "trip": trip,
+                "adults": adults,
+                "children": children,
+                "total_price": total_price,
+            })
+
+        # REVIEW
         if not request.user.is_authenticated:
             return redirect("login")
 
@@ -230,12 +277,16 @@ def trip_detail(request, pk):
     else:
         form = ReviewForm()
 
+    limit_exceeded = (raw_adults + raw_children) > max_allowed
+
     return render(request, "trips/detail.html", {
         "trip": trip,
         "form": form,
         "total_price": total_price,
         "adults": adults,
         "children": children,
+        "max_allowed": max_allowed,
+        "limit_exceeded": limit_exceeded,
     })
 
 
@@ -269,3 +320,11 @@ def contact(request):
 def thanks(request):
     return render(request, "thanks.html")
 
+
+@login_required
+def my_bookings(request):
+    bookings = request.user.bookings.all().order_by("-created_at")
+
+    return render(request, "trips/my_bookings.html", {
+        "bookings": bookings
+    })

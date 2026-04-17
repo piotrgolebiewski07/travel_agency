@@ -125,17 +125,29 @@
                             <input type="number" name="adults"
                                    value="{{ adults }}"
                                    min="1"
-                                   max="{{ trip.max_people }}"
+                                   max="{{ max_allowed }}"
                                    class="form-control">
                             <input type="number" name="children"
                                    value="{{ children }}"
                                    min="0"
-                                   max="{{ trip.max_people|add:'-1' }}"
+                                   max="{{ max_allowed|add:'-1' }}"
                                    class="form-control">
                         </div>
                         <button class="btn btn-outline-primary w-100 mt-3">
                             {% t "Przelicz cenę" "Recalculate price" %}
                         </button>
+
+                        {% if limit_exceeded %}
+                            <p class="text-muted small mt-2">
+                                {% t "Rezerwacje online dostępne są dla maksymalnie 8 osób." "Online bookings are available for up to 8 people." %}
+                                <br>
+                                {% t "Dla większych grup prosimy o" "For larger groups, please" %}
+                                <a href="{% url 'contact' %}">
+                                    {% t "kontakt z nami." "contact us." %}
+                                </a>
+                            </p>
+                        {% endif %}
+
                     </div>
                 </form>
 
