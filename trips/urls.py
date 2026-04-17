@@ -10,5 +10,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:pk>/', views.trip_detail, name="detail"),
     path("my-bookings/", views.my_bookings, name="my_bookings"),
+    path("cancel-booking/<int:booking_id>/", views.cancel_booking, name="cancel_booking"),
 ]
 

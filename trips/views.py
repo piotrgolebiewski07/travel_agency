@@ -328,3 +328,14 @@ def my_bookings(request):
     return render(request, "trips/my_bookings.html", {
         "bookings": bookings
     })
+
+
+@login_required
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+
+    if request.method == "POST":
+        booking.delete()
+
+    return redirect("my_bookings")
+

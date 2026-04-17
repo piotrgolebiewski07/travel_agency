@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="container mt-5">
-    <div class="mx-auto" style="max-width: 700px;">
+    <div class="mx-auto" style="max-width: 800px;">
         <h2 class="mb-5 text-center fw-bold">
             {% t "Moje rezerwacje" "My bookings" %}
         </h2>
@@ -49,11 +49,20 @@
                                 <strong>{{ booking.total_price }} {{ booking.trip.currency }}</strong>
                             </p>
 
-                            <small class="text-muted d-block mt-2">
-                                {% t "Data rezerwacji:" "Reservation date:" %}
-                                {{ booking.created_at|date:"d.m.Y H:i" }}
-                            </small>
 
+
+                            <form method="post" action="{% url 'cancel_booking' booking.id %}"
+                                  class="mt-2 d-flex justify-content-between align-items-center">
+                                {% csrf_token %}
+                                <small class="text-muted">
+                                    {% t "Data rezerwacji:" "Reservation date:" %}
+                                    {{ booking.created_at|date:"d.m.Y H:i" }}
+                                </small>
+
+                                <button class="btn btn-sm btn-outline-danger">
+                                    {% t "Anuluj rezerwację" "Cancel booking" %}
+                                </button>
+                            </form>
                         </div>
 
                         <!-- RIGHT COLUMN -->
