@@ -1,7 +1,7 @@
 from django.db import models
 from decimal import Decimal
 from django.utils import translation
-from django
+from django.contrib.auth.models import User
 
 
 class Trip(models.Model):
@@ -82,12 +82,17 @@ class ContactMessage(models.Model):
 
 
 class Booking(models.Model):
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="bookings")
     adults = models.IntegerField()
     children = models.IntegerField()
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="bookings")
 
     def __str__(self):
-        return f"{self.trip} - {self.adults + self.children} people"
+        return f"{self.trip} - {self.total_people} people ({self.created_at.date()})"
+
+    @property
+    def total_people(self):
+        return self.adults + self.children
 

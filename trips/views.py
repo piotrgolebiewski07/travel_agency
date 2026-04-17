@@ -8,6 +8,7 @@ from django.db.models import Avg, Count, Q, F, ExpressionWrapper, DurationField
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import connection
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 # 3. Third-party (DRF)
 from rest_framework.viewsets import ModelViewSet
@@ -243,9 +244,19 @@ def trip_detail(request, pk):
             elif adults + children > max_allowed:
                 children = max_allowed - adults
 
+            raw_total = trip.calculate_total_price(adults, children)
+
+            Booking.objects.create(
+                trip=trip,
+                user=request.user if request.user.is_authenticated else None,
+                adults=adults,
+                children=children,
+                total_price=raw_total
+            )
+
             total_price = trip.get_total_price_display(adults, children)
 
-            return render(request, "booking_confirmation.html", {
+            return render(request, "trips/booking_confirmation.html", {
                 "trip": trip,
                 "adults": adults,
                 "children": children,
@@ -267,17 +278,6 @@ def trip_detail(request, pk):
         form = ReviewForm()
 
     limit_exceeded = (raw_adults + raw_children) > max_allowed
-
-
-    # Booking
-    raw_total = trip.calculate_total_price(adults, children)
-
-    Booking.objects.create(
-        trip=trip,
-        adults=adults,
-        children=children,
-        total_price=raw_total
-    )
 
     return render(request, "trips/detail.html", {
         "trip": trip,
@@ -321,6 +321,10 @@ def thanks(request):
     return render(request, "thanks.html")
 
 
-def booking_confirmation(request):
-    return render(request, "booking_confirmation.html")
+@login_required
+def my_bookings(request):
+    bookings = request.user.bookings.all().order_by("-created_at")
 
+    return render(request, "trips/my_bookings.html", {
+        "bookings": bookings
+    })

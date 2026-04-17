@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% load translations %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="mx-auto" style="max-width: 700px;">
+        <h2 class="mb-5 text-center fw-bold">
+            {% t "Moje rezerwacje" "My bookings" %}
+        </h2>
+
+        {% for booking in bookings %}
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="row align-items-center">
+
+                        <!-- LEWA KOLUMNA -->
+                        <div class="col-md-6 d-flex flex-column justify-content-center text-start">
+
+                            <h5 class="mb-3">
+                                {{ booking.trip.title_pl|default:booking.trip.title_en }}
+                            </h5>
+
+                            <hr class="my-3">
+
+                            <p class="mb-2 text-muted">
+                                {% t "Kiedy:" "Dates:" %}<br>
+                                <strong>
+                                    {{ booking.trip.start_date|date:"d.m.Y" }} →
+                                    {{ booking.trip.end_date|date:"d.m.Y" }}
+                                </strong>
+                            </p>
+
+                            <p class="mb-2 text-muted">
+                                {% t "Uczestnicy:" "Participants:" %}<br>
+                                <strong>
+                                    {{ booking.adults }} {% if booking.adults == 1 %}dorosły{% else %}dorosłych{% endif %}
+                                    {% if booking.children %}
+                                        , {{ booking.children }} {% if booking.children == 1 %}dziecko{% else %}dzieci{% endif %}
+                                    {% endif %}
+                                </strong>
+                            </p>
+
+                            <hr class="my-3">
+
+                            <p class="mb-1">
+                                {% t "Cena całkowita:" "Total price:" %}
+                                <strong>{{ booking.total_price }} {{ booking.trip.currency }}</strong>
+                            </p>
+
+                            <small class="text-muted d-block mt-2">
+                                {% t "Data rezerwacji:" "Reservation date:" %}
+                                {{ booking.created_at|date:"d.m.Y H:i" }}
+                            </small>
+
+                        </div>
+
+                        <!-- RIGHT COLUMN -->
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div style="width: 100%;">
+
+                                {% with booking.trip.images.all|dictsortreversed:"is_main"|first as img %}
+                                    {% if img %}
+                                        <img src="{{ img.image.url }}"
+                                             class="img-fluid rounded"
+                                             style="height: 100%; width: 100%; object-fit: cover;">
+                                    {% else %}
+                                        <img src="https://via.placeholder.com/300x225"
+                                             class="img-fluid rounded">
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        {% empty %}
+            <p class="text-center text-muted">
+                {% t "Brak rezerwacji" "No bookings yet" %}
+            </p>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}
