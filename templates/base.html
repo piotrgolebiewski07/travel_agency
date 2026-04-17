@@ -39,17 +39,27 @@
         <div class="d-flex gap-2 align-items-center">
 
             {% if request.user.is_authenticated %}
-                <span class="text-white small">
+                <span class="text-white small fw-bold">
                     {{ request.user.username }}
                 </span>
 
-                <form action="{% url 'logout' %}" method="post">
+                <a href="{% url 'my_bookings' %}" class="btn btn-sm btn-outline-light">
+                    {% t "Moje rezerwacje" "My bookings" %}
+                </a>
+
+                <a href="{% url 'password_change' %}" class="btn btn-sm btn-outline-light">
+                    {% t "Zmień hasło" "Change password" %}
+                </a>
+
+                <form action="{% url 'logout' %}" method="post" class="d-inline">
                     {% csrf_token %}
-                    <button class="btn btn-sm btn-outline-light">Logout</button>
+                    <button class="btn btn-sm btn-outline-light">
+                        {% t "Wyloguj" "Logout" %}
+                    </button>
                 </form>
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn-sm btn-light">
-                    Login
+                    {% t "Zaloguj" "Login" %}
                 </a>
             {% endif %}
 
