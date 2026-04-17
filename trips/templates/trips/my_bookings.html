@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="container mt-5">
-    <div class="mx-auto" style="max-width: 700px;">
+    <div class="mx-auto" style="max-width: 800px;">
         <h2 class="mb-5 text-center fw-bold">
             {% t "Moje rezerwacje" "My bookings" %}
         </h2>
@@ -35,9 +35,9 @@
                             <p class="mb-2 text-muted">
                                 {% t "Uczestnicy:" "Participants:" %}<br>
                                 <strong>
-                                    {{ booking.adults }} {% if booking.adults == 1 %}dorosły{% else %}dorosłych{% endif %}
+                                    {{ booking.adults }} {% if booking.adults == 1 %}{% t "dorosły" "adult" %}{% else %}{% t "dorosłych" "adults" %}{% endif %}
                                     {% if booking.children %}
-                                        , {{ booking.children }} {% if booking.children == 1 %}dziecko{% else %}dzieci{% endif %}
+                                        , {{ booking.children }} {% if booking.children == 1 %}{% t "dziecko" "child" %}{% else %}{% t "dzieci" "children" %}{% endif %}
                                     {% endif %}
                                 </strong>
                             </p>
@@ -46,14 +46,23 @@
 
                             <p class="mb-1">
                                 {% t "Cena całkowita:" "Total price:" %}
-                                <strong>{{ booking.total_price }} {{ booking.trip.currency }}</strong>
+                                <strong>{{ booking.get_total_price_display }}</strong>
                             </p>
 
-                            <small class="text-muted d-block mt-2">
-                                {% t "Data rezerwacji:" "Reservation date:" %}
-                                {{ booking.created_at|date:"d.m.Y H:i" }}
-                            </small>
 
+
+                            <form method="post" action="{% url 'cancel_booking' booking.id %}"
+                                  class="mt-2 d-flex justify-content-between align-items-center">
+                                {% csrf_token %}
+                                <small class="text-muted">
+                                    {% t "Data rezerwacji:" "Reservation date:" %}
+                                    {{ booking.created_at|date:"d.m.Y H:i" }}
+                                </small>
+
+                                <button class="btn btn-sm btn-outline-danger">
+                                    {% t "Anuluj rezerwację" "Cancel booking" %}
+                                </button>
+                            </form>
                         </div>
 
                         <!-- RIGHT COLUMN -->

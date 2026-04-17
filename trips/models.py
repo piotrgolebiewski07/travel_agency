@@ -96,3 +96,12 @@ class Booking(models.Model):
     def total_people(self):
         return self.adults + self.children
 
+    def get_total_price_display(self):
+        lang = translation.get_language()
+
+        if lang == "pl":
+            if self.trip.currency == "EUR":
+                return f"{int(self.total_price * Decimal('4.26'))} zł"
+            return f"{int(self.total_price)} zł"
+        return f"{int(self.total_price)} €"
+
