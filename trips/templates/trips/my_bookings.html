@@ -46,7 +46,13 @@
 
                             <p class="mb-1">
                                 {% t "Cena całkowita:" "Total price:" %}
-                                <strong>{{ booking.get_total_price_display }}</strong>
+                                <strong>
+                                    {% if request.LANGUAGE_CODE == "pl" %}
+                                        {{ booking.price_pln|floatformat:0 }} zł
+                                    {% else %}
+                                        {{ booking.total_price|floatformat:0 }} €
+                                    {% endif %}
+                                </strong>
                             </p>
 
 

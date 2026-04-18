@@ -1,15 +1,21 @@
 {% extends "base.html" %}
 
+{% load translations %}
+
 {% block content %}
 
 <div class="container mt-5 text-center">
 
     <h2 class="mb-4 text-success">
-        ✅ Rezerwacja została przyjęta
+        ✅ {% t "Rezerwacja została przyjęta" "Booking confirmed" %}
     </h2>
 
     <h4>
-        {{ trip.title_pl|default:trip.title_en }}
+        {% if request.LANGUAGE_CODE == "pl" %}
+            {{ trip.title_pl|default:trip.title_en }}
+        {% else %}
+            {{ trip.title_en|default:trip.title_pl }}
+        {% endif %}
     </h4>
 
     <p class="text-muted">
@@ -17,15 +23,22 @@
     </p>
 
     <p>
-        {{ adults }} dorosłych {% if children %}, {{ children }} dzieci{% endif %}
+        {{ adults }} {% if adults == 1 %}{% t "dorosły" "adult" %}{% else %}{% t "dorosłych" "adults" %}{% endif %}
+        {% if children %}
+            , {{ children }} {% if children == 1 %}{% t "dziecko" "child" %}{% else %}{% t "dzieci" "children" %}{% endif %}
+        {% endif %}
     </p>
 
-    <p class="fw-bold">
-        {{ total_price }}
+    <p class="fw-bold fs-4">
+        {% if request.LANGUAGE_CODE == "pl" %}
+            {{ total_price_pln|floatformat:0 }} zł
+        {% else %}
+            {{ total_price_eur|floatformat:0 }} €
+        {% endif %}
     </p>
 
     <a href="{% url 'my_bookings' %}" class="btn btn-primary mt-3">
-        Moje rezerwacje
+        {% t "Moje rezerwacje" "My bookings" %}
     </a>
 
 </div>

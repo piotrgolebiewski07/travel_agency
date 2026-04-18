@@ -1,5 +1,7 @@
 # 1. Standard library
 from datetime import timedelta
+import requests
+from decimal import Decimal
 
 # 2. Django
 from django.shortcuts import render, get_object_or_404, redirect
@@ -54,7 +56,7 @@ def get_filtered_trips(request):
     location = request.GET.get("location")
     min_price = safe_float(request.GET.get("min_price"))
     max_price = safe_float(request.GET.get("max_price"))
-    min_rating = safe_float (request.GET.get("min_rating"))
+    min_rating = safe_float(request.GET.get("min_rating"))
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
     available = request.GET.get("available")
@@ -149,7 +151,10 @@ def home(request):
         )
     ).order_by("start_date")[:3]
 
+    rate = get_eur_to_pln_rate()
+
     for trip in trips:
+        trip.price_pln = trip.price * Decimal(str(rate))
         trip.duration_days = trip.duration.days
 
     return render(request, "home.html", {"trips": trips})
@@ -166,6 +171,7 @@ def index(request):
     page_obj = paginator.get_page(page_number)
 
     adults, children, total_people = normalize_guests(request)
+    rate = get_eur_to_pln_rate()
 
     price_type = request.GET.get("price_type", "person")
 
@@ -175,7 +181,9 @@ def index(request):
     limit_exceeded = (raw_adults + raw_children) > 8
 
     for trip in page_obj:
-        trip.total_price_display = trip.get_total_price_display(adults, children)
+        trip.total_price_eur = trip.calculate_total_price(adults, children)
+        trip.total_price_pln = trip.total_price_eur * Decimal(str(rate))
+        trip.price_pln = trip.price * Decimal(str(rate))
         trip.duration_days = trip.duration.days
 
     if settings.DEBUG:
@@ -220,7 +228,10 @@ def trip_detail(request, pk):
     elif adults + children > max_allowed:
         children = max_allowed - adults
 
-    total_price = trip.get_total_price_display(adults, children)
+    rate = get_eur_to_pln_rate()
+
+    total_price_eur = trip.calculate_total_price(adults, children)
+    total_price_pln = total_price_eur * Decimal(str(rate))
 
     if request.method == "POST":
 
@@ -254,13 +265,17 @@ def trip_detail(request, pk):
                 total_price=raw_total
             )
 
-            total_price = trip.get_total_price_display(adults, children)
+            rate = get_eur_to_pln_rate()
+
+            total_price_eur = trip.calculate_total_price(adults, children)
+            total_price_pln = total_price_eur * Decimal(str(rate))
 
             return render(request, "trips/booking_confirmation.html", {
                 "trip": trip,
                 "adults": adults,
                 "children": children,
-                "total_price": total_price,
+                "total_price_eur": total_price_eur,
+                "total_price_pln": total_price_pln,
             })
 
         # REVIEW
@@ -282,7 +297,8 @@ def trip_detail(request, pk):
     return render(request, "trips/detail.html", {
         "trip": trip,
         "form": form,
-        "total_price": total_price,
+        "total_price_eur": total_price_eur,
+        "total_price_pln": total_price_pln,
         "adults": adults,
         "children": children,
         "max_allowed": max_allowed,
@@ -298,7 +314,6 @@ def safe_float(value):
 
 
 def contact(request):
-
     if request.method == "POST":
         form = ContactForm(request.POST)
 
@@ -325,8 +340,13 @@ def thanks(request):
 def my_bookings(request):
     bookings = request.user.bookings.all().order_by("-created_at")
 
+    rate = get_eur_to_pln_rate()
+
+    for booking in bookings:
+        booking.price_pln = booking.total_price * Decimal(str(rate))
+
     return render(request, "trips/my_bookings.html", {
-        "bookings": bookings
+        "bookings": bookings,
     })
 
 
@@ -338,4 +358,14 @@ def cancel_booking(request, booking_id):
         booking.delete()
 
     return redirect("my_bookings")
+
+
+def get_eur_to_pln_rate():
+    try:
+        response = requests.get("https://open.er-api.com/v6/latest/EUR")
+        data = response.json()
+        return data["rates"]["PLN"]
+    except Exception as e:
+        print("ERROR:", e)
+        return 4.22
 
