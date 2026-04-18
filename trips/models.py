@@ -21,16 +21,6 @@ class Trip(models.Model):
     def __str__(self):
         return self.title_pl or self.title_en
 
-    def get_price_display(self):
-        lang = translation.get_language()
-
-        if lang == "pl":
-            if self.currency == "EUR":
-                return f"{int(self.price * Decimal('4.26'))} zł"
-            return f"{int(self.price)} zł"
-
-        return f"{int(self.price)} €"
-
     def calculate_total_price(self, adults, children):
         adults = int(adults or 0)
         children = int(children or 0)
@@ -38,17 +28,6 @@ class Trip(models.Model):
         total = (adults * self.price + children * self.price * Decimal("0.8"))
 
         return int(total)
-
-    def get_total_price_display(self, adults, children):
-        total = self.calculate_total_price(adults, children)
-        lang = translation.get_language()
-
-        if lang == "pl":
-            if self.currency == "EUR":
-                return f"{int(total * Decimal('4.26'))} zł"
-            return f"{int(total)} zł"
-
-        return f"{int(total)} €"
 
 
 class TripImage(models.Model):
@@ -95,13 +74,4 @@ class Booking(models.Model):
     @property
     def total_people(self):
         return self.adults + self.children
-
-    def get_total_price_display(self):
-        lang = translation.get_language()
-
-        if lang == "pl":
-            if self.trip.currency == "EUR":
-                return f"{int(self.total_price * Decimal('4.26'))} zł"
-            return f"{int(self.total_price)} zł"
-        return f"{int(self.total_price)} €"
 

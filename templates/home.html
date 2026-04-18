@@ -61,7 +61,11 @@
                                 </span>
                             </p>
                            <strong class="mt-1 fs-5">
-                                {{ trip.get_price_display }}
+                                {% if request.LANGUAGE_CODE == "pl" %}
+                                    {{ trip.price_pln|floatformat:0 }} zł
+                                {% else %}
+                                    {{ trip.price_eur|floatformat:0 }} €
+                                {% endif %}
                             </strong>
 
                         </div>
