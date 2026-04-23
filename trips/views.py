@@ -233,6 +233,9 @@ def trip_detail(request, pk):
     total_price_eur = trip.calculate_total_price(adults, children)
     total_price_pln = total_price_eur * Decimal(str(rate))
 
+    booked_people = sum(b.adults + b.children for b in trip.bookings.all())
+    available_places = max(0, trip.max_people - booked_people)
+
     if request.method == "POST":
 
         # BOOKING
@@ -259,7 +262,9 @@ def trip_detail(request, pk):
                     "children": children,
                     "max_allowed": max_allowed,
                     "limit_exceeded": True,
-                    "no_availability": True,  # 🔥 komunikat
+                    "no_availability": True,
+                    "available_places": available_places,
+                    "too_many_people": True,
                 })
 
             raw_total = trip.calculate_total_price(adults, children)
@@ -308,6 +313,7 @@ def trip_detail(request, pk):
         "children": children,
         "max_allowed": max_allowed,
         "limit_exceeded": limit_exceeded,
+        "available_places": available_places,
     })
 
 
