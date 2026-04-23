@@ -167,16 +167,19 @@
 
                     <p class="mb-3">
                         <span class="text-muted">
-                            <span class="text-muted">
-                                {% t "Liczba osób:" "Max guests:" %}
-                            </span>
+                            {% t "Dostępne miejsca:" "Available places:" %}
                         </span>
-                        <strong>{{ trip.max_people }}</strong>
+                        <strong>{{ available_places }}</strong>
                     </p>
 
+                    {% if too_many_people %}
+                        <p class="text-danger mt-2">
+                            {% t "Wybrano zbyt dużą liczbę osób" "Too many people selected" %}
+                        </p>
+                    {% endif %}
                 </div>
 
-                {% if trip.available %}
+                {% if available_places > 0 and trip.available %}
                     <form method="post" class="mt-3">
                         {% csrf_token %}
 
@@ -188,7 +191,7 @@
                         </button>
                     </form>
                 {% else %}
-                    <span class="text-danger">{% t "Niedostępne" "Not available" %}</span>
+                    <span class="text-danger">{% t "Brak dostępnych miejsc" "No available places" %}</span>
                 {% endif %}
 
             </div>
