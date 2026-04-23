@@ -240,20 +240,27 @@ def trip_detail(request, pk):
             adults = int(request.POST.get("adults") or 1)
             children = int(request.POST.get("children") or 0)
 
-            max_allowed = min(trip.max_people, 8)
-
             if adults < 1:
                 adults = 1
 
             if children < 0:
                 children = 0
+            booked_people = sum(b.adults + b.children for b in trip.bookings.all())
+            new_people = adults + children
 
-            if adults > max_allowed:
-                adults = max_allowed
-                children = 0
-
-            elif adults + children > max_allowed:
-                children = max_allowed - adults
+            if booked_people + new_people > trip.max_people:
+                form = ReviewForm()
+                return render(request, "trips/detail.html", {
+                    "trip": trip,
+                    "form": form,
+                    "total_price_eur": total_price_eur,
+                    "total_price_pln": total_price_pln,
+                    "adults": adults,
+                    "children": children,
+                    "max_allowed": max_allowed,
+                    "limit_exceeded": True,
+                    "no_availability": True,  # 🔥 komunikat
+                })
 
             raw_total = trip.calculate_total_price(adults, children)
 
@@ -264,8 +271,6 @@ def trip_detail(request, pk):
                 children=children,
                 total_price=raw_total
             )
-
-            rate = get_eur_to_pln_rate()
 
             total_price_eur = trip.calculate_total_price(adults, children)
             total_price_pln = total_price_eur * Decimal(str(rate))
@@ -289,8 +294,8 @@ def trip_detail(request, pk):
             review.trip = trip
             review.save()
             return redirect("detail", pk=pk)
-    else:
-        form = ReviewForm()
+
+    form = ReviewForm()
 
     limit_exceeded = (raw_adults + raw_children) > max_allowed
 
