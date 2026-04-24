@@ -1,8 +1,9 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from .models import Trip, Booking
 from django.urls import reverse
 from datetime import date
+from .views import get_filtered_trips
 
 
 class BookingTests(TestCase):
@@ -113,4 +114,75 @@ class BookingTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Available places")
+
+
+class FilterTests(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()  # create false request
+
+        # Trip 1
+        self.trip1 = Trip.objects.create(
+            title_pl="Hiszpania",
+            title_en="Spain",
+            description_pl="Opis",
+            description_en="Desc",
+            price=100,
+            start_date=date(2026, 1, 1),
+            end_date=date(2026, 1, 5),
+            country="Spain",
+            location="Barcelona",
+            max_people=5,
+            available=True
+        )
+
+        # Trip 2
+        self.trip2 = Trip.objects.create(
+            title_pl="Włochy",
+            title_en="Italy",
+            description_pl="Opis",
+            description_en="Desc",
+            price=200,
+            start_date=date(2026, 2, 1),
+            end_date=date(2026, 2, 5),
+            country="Italy",
+            location="Rome",
+            max_people=5,
+            available=True
+        )
+
+    def test_filter_by_country(self):
+        request = self.factory.get("/trips/?country=Spain")
+        trips = get_filtered_trips(request)
+
+        self.assertEqual(trips.count(), 1)
+        self.assertEqual(trips.first(), self.trip1)
+
+    def test_filter_by_min_price(self):
+        request = self.factory.get("/trips/?min_price=150")
+        trips = get_filtered_trips(request)
+
+        self.assertEqual(trips.count(), 1)
+        self.assertEqual(trips.first(), self.trip2)
+
+    def test_search(self):
+        request = self.factory.get("/trips/?search=Spain")
+        trips = get_filtered_trips(request)
+
+        self.assertEqual(trips.count(), 1)
+        self.assertEqual(trips.first(), self.trip1)
+
+    def test_sort_price_asc(self):
+        request = self.factory.get("/trips/?sort=price_asc")
+        trips = list(get_filtered_trips(request))
+
+        self.assertEqual(trips[0], self.trip1)
+        self.assertEqual(trips[1], self.trip2)
+
+    def test_sort_price_desc(self):
+        request = self.factory.get("/trips/?sort=price_desc")
+        trips = list(get_filtered_trips(request))
+
+        self.assertEqual(trips[0], self.trip2)
+        self.assertEqual(trips[1], self.trip1)
 
