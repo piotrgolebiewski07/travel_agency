@@ -1,9 +1,14 @@
+# 1. Standard library
+from datetime import date
+
+# 2. Django
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
-from .models import Trip, Booking
 from django.urls import reverse
-from datetime import date
-from .views import get_filtered_trips
+
+# 3. Local imports
+from .models import Trip, Booking
+from .views import get_filtered_trips, normalize_guests
 
 
 class BookingTests(TestCase):
@@ -186,3 +191,44 @@ class FilterTests(TestCase):
         self.assertEqual(trips[0], self.trip2)
         self.assertEqual(trips[1], self.trip1)
 
+
+class NormalizeTests(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_default_values(self):
+        request = self.factory.get("/trips/")
+        adults, children, total = normalize_guests(request)
+
+        self.assertEqual(adults, 1)
+        self.assertEqual(children, 0)
+        self.assertEqual(total, 1)
+
+    def test_negative_values(self):
+        request = self.factory.get("/trips/?adults=-5&children=-3")
+        adults, children, total = normalize_guests(request)
+
+        self.assertEqual(adults, 1)
+        self.assertEqual(children, 0)
+
+    def test_max_people_limit(self):
+        request = self.factory.get("/trips/?adults=6&children=5")
+        adults, children, total = normalize_guests(request)
+
+        self.assertEqual(total, 8)
+
+    def test_adults_over_limit(self):
+        request = self.factory.get("/trips/?adults=10&children=2")
+        adults, children, total = normalize_guests(request)
+
+        self.assertEqual(adults, 8)
+        self.assertEqual(children, 0)
+
+    def test_normal_values(self):
+        request = self.factory.get("/trips/?adults=3&children=2")
+        adults, children, total = normalize_guests(request)
+
+        self.assertEqual(adults, 3)
+        self.assertEqual(children, 2)
+        self.assertEqual(total, 5)
