@@ -166,7 +166,7 @@ def index(request):
     locations = Trip.objects.values_list("location", flat=True).distinct().order_by("location")
     countries = Trip.objects.values_list("country", flat=True).distinct().order_by("country")
 
-    paginator = Paginator(trips, 5)  # 5 trips na stronę
+    paginator = Paginator(trips, 6)  # 6 trips na stronę
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 

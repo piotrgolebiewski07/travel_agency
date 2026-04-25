@@ -28,8 +28,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
-
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",") if os.environ.get("ALLOWED_HOSTS") else ["*"]
 
 # Application definition
 
@@ -131,7 +130,7 @@ STATIC_URL = '/static/'
 
 # media (uploaded images)
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "MEDIA"
+MEDIA_ROOT = BASE_DIR / "media"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 REST_FRAMEWORK = {
@@ -142,3 +141,4 @@ REST_FRAMEWORK = {
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
