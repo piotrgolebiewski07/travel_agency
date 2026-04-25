@@ -24,7 +24,7 @@ Web application for browsing and booking trips with availability control and fil
 
 ## Run locally
 ```bash
-git clone <repo>
+git clone https://github.com/piotrgolebiewski07/travel_agency.git
 cd travel_agency
 
 python -m venv .venv
@@ -39,9 +39,9 @@ python manage.py runserver
 http://127.0.0.1:8000/
 
 ## Tests
-
+```bash
 python manage.py test
-
+```
 ## Demo
 
 Coming soon.
