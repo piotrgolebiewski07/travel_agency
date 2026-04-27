@@ -73,6 +73,7 @@ python manage.py test
 https://travel-agency-u5y1.onrender.com/
 
 ## Demo account
+Use this account to test adding reviews.
 
 Login: demo  
 Password: demo123
