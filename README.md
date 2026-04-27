@@ -17,7 +17,7 @@ Full-stack Django web application for browsing and booking trips with availabili
 ## Tech Stack
 
 - Python, Django
-- SQLite
+- PostgreSQL (production), SQLite (local development)
 - Bootstrap
 - Django Templates
 - Django REST Framework (read-only API for trips)
@@ -73,7 +73,9 @@ python manage.py test
 https://travel-agency-u5y1.onrender.com/
 
 ## Demo account
-Use this account to test adding reviews.
+Use this account to test reviews.
+
+> ⚠️ The app may take a few seconds to start on first visit (Render free tier).
 
 Login: demo  
 Password: demo123
