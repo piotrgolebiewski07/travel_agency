@@ -55,7 +55,10 @@
                                 </strong>
                             </p>
 
-
+                            <p class="text-muted">
+                                {% t "Dziękujemy za rezerwację! Szczegóły znajdziesz w panelu użytkownika."
+                                     "Thank you for your booking! Details are available in your account." %}
+                            </p>
 
                             <form method="post" action="{% url 'cancel_booking' booking.id %}"
                                   class="mt-2 d-flex justify-content-between align-items-center">
@@ -77,9 +80,9 @@
 
                                 {% with booking.trip.images.all|dictsortreversed:"is_main"|first as img %}
                                     {% if img %}
-                                        <img src="{{ img.image.url }}"
+                                        <img src="{% if img.image %}{{ img.image.url }}{% elif img.image_url %}{{ img.image_url }}{% else %}https://via.placeholder.com/400x300{% endif %}"
                                              class="img-fluid rounded"
-                                             style="height: 100%; width: 100%; object-fit: cover;">
+                                            style="height: 100%; width: 100%; object-fit: cover;">
                                     {% else %}
                                         <img src="https://via.placeholder.com/300x225"
                                              class="img-fluid rounded">

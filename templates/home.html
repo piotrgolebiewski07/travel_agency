@@ -20,7 +20,7 @@
                          style="height: 300px;
                                 background-size: cover;
                                 background-position: center;
-                                background-image: url('{% if img %}{{ img.image.url }}{% else %}https://via.placeholder.com/400x300{% endif %}');">
+                                background-image: url('{% if img and img.image %}{{ img.image.url }}{% elif img and img.image_url %}{{ img.image_url }}{% else %}https://via.placeholder.com/400x300{% endif %}');">
 
                         <!-- 🔥 OPINIE W PRAWYM GÓRNYM ROGU -->
                         <div class="position-absolute top-0 end-0 m-2 px-2 py-1"
