@@ -1,6 +1,6 @@
 # Travel Agency (Django)
 
-Web application for browsing and booking trips with availability control and filtering.
+Full-stack Django web application for browsing and booking trips with availability control, filtering, and user management.
 
 ## Features
 
@@ -12,7 +12,7 @@ Web application for browsing and booking trips with availability control and fil
 - Search and sorting
 - Multi-language (PL / EN)
 - User bookings panel
-- Test coverage for booking logic, availability, and filtering
+- Basic test coverage for booking logic, availability, and filtering
 
 ## Tech Stack
 
@@ -20,7 +20,13 @@ Web application for browsing and booking trips with availability control and fil
 - SQLite
 - Bootstrap
 - Django Templates
-- Django REST Framework (basic API)
+- Django REST Framework (read-only API for trips)
+
+## Screenshots
+
+![Home](screenshots/home.png)
+![Trips](screenshots/trips.png)
+![Details](screenshots/details.png)
 
 ## Run locally
 ```bash
@@ -32,16 +38,44 @@ python -m venv .venv
 
 pip install -r requirements.txt
 python manage.py migrate
+python seed_data.py
 python manage.py runserver
 ```
 ## Open in browser
 
 http://127.0.0.1:8000/
 
+## Seed data
+The project includes a seed script (seed_data.py) which populates the database with sample trips and reviews.
+
+This ensures the application has realistic demo content after setup or deployment.
+
+---
+
+## Deployment (Render)
+Start Command:
+```bash
+python manage.py migrate && python seed_data.py && python manage.py collectstatic --noinput && gunicorn config.wsgi
+```
+Environment variables:
+```env
+SECRET_KEY=your_secret_key
+DEBUG=False
+ALLOWED_HOSTS=your-domain.onrender.com
+```
+---
 ## Tests
+Basic test coverage for booking logic and filtering is included.
 ```bash
 python manage.py test
 ```
-## Demo
+## 🌍 Demo
+https://travel-agency-u5y1.onrender.com/
 
-Coming soon.
+## Key Concepts
+
+- Django ORM with annotations (average rating, filtering)
+- Overbooking protection logic
+- Server-side rendering with Django templates
+- REST API with Django REST Framework
+- Deployment on Render with environment configuration
