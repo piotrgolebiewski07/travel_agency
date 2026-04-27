@@ -155,6 +155,7 @@ def home(request):
 
     for trip in trips:
         trip.price_pln = trip.price * Decimal(str(rate))
+        trip.price_eur = trip.price
         trip.duration_days = trip.duration.days
 
     return render(request, "home.html", {"trips": trips})
