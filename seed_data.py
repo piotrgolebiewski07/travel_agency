@@ -6,6 +6,7 @@ django.setup()
 
 from trips.models import Trip, TripImage, Review
 from datetime import date
+from django.contrib.auth.models import User
 
 
 def create_trip(title_pl,
@@ -55,6 +56,12 @@ def create_trip(title_pl,
 
 
 def run():
+    user, created = User.objects.get_or_create(username="demo")
+
+    if created:
+        user.set_password("demo123")
+        user.save()
+
     create_trip(
         "Wakacje na Santorini",
         "Santorini Holiday",
