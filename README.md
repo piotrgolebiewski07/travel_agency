@@ -72,6 +72,11 @@ python manage.py test
 ## 🌍 Demo
 https://travel-agency-u5y1.onrender.com/
 
+## Demo account
+
+Login: demo  
+Password: demo123
+
 ## Key Concepts
 
 - Django ORM with annotations (average rating, filtering)
