@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class Trip(models.Model):
     title_pl = models.CharField(max_length=100)
-    title_en = models.CharField(max_length=100)
+    title_en = models.CharField(max_length=100, unique=True)
     description_pl = models.TextField(max_length=1000)
     description_en = models.TextField(max_length=1000)
     price = models.DecimalField(max_digits=8, decimal_places=2)

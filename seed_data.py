@@ -4,7 +4,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
-from trips.models import Trip, TripImage
+from trips.models import Trip, TripImage, Review
 from datetime import date
 
 
@@ -17,7 +17,8 @@ def create_trip(title_pl,
                 country,
                 location,
                 price,
-                image_urls
+                image_urls,
+                reviews=None
                 ):
     trip, created = Trip.objects.get_or_create(
         title_en=title_en,
@@ -42,6 +43,15 @@ def create_trip(title_pl,
                 image_url=url,
                 is_main=(i == 0),  # main photo
             )
+
+        if reviews:
+            for r in reviews:
+                Review.objects.create(
+                    trip=trip,
+                    name=r["name"],
+                    rating=r["rating"],
+                    comment=r["comment"]
+                )
 
 
 def run():
@@ -76,8 +86,25 @@ def run():
         "Santorini",
         600,
         image_urls=[
-            "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/santorini_4.jpg",
-            "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/santorini_3.jpg"
+            "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/santorini_1.jpg",
+            "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/santorini_2.jpg"
+        ],
+        reviews=[
+            {
+                "name": "Anna",
+                "rating": 5,
+                "comment": "To była absolutnie wyjątkowa podróż, a widoki na białe domy i błękitne morze sprawiały, że człowiek nie chciał wracać do rzeczywistości."
+            },
+            {
+                "name": "John",
+                "rating": 4,
+                "comment": "The island is stunning and very well organized for tourists, although in some places it felt a bit crowded during the peak hours."
+            },
+            {
+                "name": "Kasia",
+                "rating": 5,
+                "comment": "Świetna wycieczka, wszystko dopięte na ostatni guzik i naprawdę można było odpocząć."
+            }
         ]
     )
 
@@ -114,6 +141,18 @@ def run():
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/barcelona_1.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/barcelona_2.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/barcelona_6.jpg"
+        ],
+        reviews=[
+            {
+                "name": "Marek",
+                "rating": 4,
+                "comment": "Barcelona zrobiła na mnie ogromne wrażenie swoją architekturą i klimatem, a połączenie zwiedzania i odpoczynku na plaży było idealne."
+            },
+            {
+                "name": "Emily",
+                "rating": 5,
+                "comment": "Amazing experience with beautiful architecture, great food and a vibrant atmosphere that made every day feel exciting and unique."
+            }
         ]
     )
 
@@ -138,6 +177,13 @@ def run():
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/gorges_1.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/gorges_2.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/gorges_6.jpg",
+        ],
+        reviews=[
+            {
+                "name": "Tom",
+                "rating": 5,
+                "comment": "Niesamowite miejsce dla osób, które kochają naturę, ciszę i spektakularne widoki, bo kanion naprawdę robi ogromne wrażenie na żywo."
+            }
         ]
     )
 
@@ -168,6 +214,18 @@ def run():
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/madera_1.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/madera_2.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/madera_3.jpg"
+        ],
+        reviews=[
+            {
+                "name": "Piotr",
+                "rating": 5,
+                "comment": "Madera zachwyciła mnie swoją naturą i spokojem, a piesze trasy wzdłuż levad były jednymi z najpiękniejszych jakie widziałem."
+            },
+            {
+                "name": "Laura",
+                "rating": 4,
+                "comment": "Great destination for active holidays with beautiful landscapes and fresh air, although some hikes were more demanding than expected."
+            }
         ]
     )
 
@@ -220,6 +278,28 @@ def run():
         image_urls=[
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/malaga_6.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/malaga_3.jpg",
+        ],
+        reviews=[
+            {
+                "name": "Tomasz",
+                "rating": 4,
+                "comment": "Bardzo przyjemne miasto z piękną pogodą, dobrą kuchnią i ciekawymi zabytkami, idealne na spokojny city break."
+            },
+            {
+                "name": "Michał",
+                "rating": 3,
+                "comment": "Miasto jest ładne i ma swój klimat, ale momentami było dość tłoczno i nie wszystko zrobiło na mnie takie wrażenie jak się spodziewałem."
+            },
+            {
+                "name": "Laura",
+                "rating": 2,
+                "comment": "Weather was great but overall the trip felt a bit too touristy and crowded, which made it harder to really enjoy the place."
+            },
+            {
+                "name": "Paweł",
+                "rating": 3,
+                "comment": "Wyjazd był w porządku, ale niektóre atrakcje okazały się mniej interesujące niż oczekiwałem i brakowało mi czegoś wyjątkowego."
+            }
         ]
     )
 
@@ -257,6 +337,18 @@ def run():
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/szwajcaria_1.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/szwajcaria_2.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/szwajcaria_3.jpg"
+        ],
+        reviews=[
+            {
+                "name": "Andrzej",
+                "rating": 4,
+                "comment": "Widoki w Alpach są niesamowite, a organizacja wyjazdu sprawiła, że można było w pełni cieszyć się naturą."
+            },
+            {
+                "name": "Emma",
+                "rating": 4,
+                "comment": "Beautiful scenery and very clean environment, although prices were quite high compared to other destinations."
+            }
         ]
     )
 
@@ -294,6 +386,33 @@ def run():
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/dorset_1.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/dorset_2.jpg",
             "https://raw.githubusercontent.com/piotrgolebiewski07/travel_agency/main/media/trips/dorset_3.jpg"
+        ],
+        reviews=[
+            {
+                "name": "Oliver",
+                "rating": 5,
+                "comment": "The coastline is absolutely stunning and walking along the cliffs was one of the most relaxing experiences I have had in a long time."
+            },
+            {
+                "name": "Anna",
+                "rating": 4,
+                "comment": "Bardzo piękne widoki i spokojna atmosfera, choć miejscami brakowało mi większej liczby atrakcji poza spacerami."
+            },
+            {
+                "name": "James",
+                "rating": 3,
+                "comment": "Nice place for a quiet getaway with great views, but overall it felt a bit repetitive after a couple of days."
+            },
+            {
+                "name": "Katarzyna",
+                "rating": 2,
+                "comment": "Miejsce ładne, ale pogoda była zmienna i momentami ciężko było w pełni cieszyć się wyjazdem."
+            },
+            {
+                "name": "Daniel",
+                "rating": 4,
+                "comment": "Great scenery and peaceful environment, although transport between locations could have been a bit more convenient."
+            }
         ]
     )
 
