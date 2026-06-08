@@ -62,6 +62,13 @@ def get_filtered_trips(request):
     available = request.GET.get("available")
     search = request.GET.get("search")
     sort = request.GET.get("sort")
+    rate = get_eur_to_pln_rate()
+
+    if request.LANGUAGE_CODE == "pl":
+        if min_price is not None:
+            min_price = min_price / rate
+        if max_price is not None:
+            max_price = max_price / rate
 
     adults, children, total_people = normalize_guests(request)
 
