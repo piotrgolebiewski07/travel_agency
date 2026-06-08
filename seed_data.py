@@ -21,7 +21,7 @@ def create_trip(title_pl,
                 image_urls,
                 reviews=None
                 ):
-    trip, created = Trip.objects.get_or_create(
+    trip, created = Trip.objects.update_or_create(
         title_en=title_en,
         defaults={
             "title_pl": title_pl,
