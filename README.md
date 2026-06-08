@@ -1,23 +1,41 @@
 # Travel Agency (Django)
 
-Full-stack Django web application for browsing and booking trips with availability control, filtering, and user management.
+Full-stack travel booking application built with Django and PostgreSQL.
+
+## Live demo
+
+**Primary:**
+https://pgolebiewski07.alwaysdata.net
+
+**Backup:**
+https://travel-agency-u5y1.onrender.com/
+
+## Demo account
+Use this account to test reviews.
+
+> ⚠️ The backup Render deployment may take up to 1 minute to start after inactivity.
+
+Login: demo  
+Password: demo123
 
 ## Features
 
-- Browse trips with images and descriptions
+- Browse and search trips with advanced filtering
 - Booking system with overbooking protection
 - Dynamic price calculation (EUR / PLN)
-- Available places tracking
-- Advanced filtering (country, price, rating, duration)
-- Search and sorting
-- Multi-language (PL / EN)
+- Trip reviews and rating system
+- Multi-language support (PL / EN)
 - User bookings panel
-- Basic test coverage for booking logic, availability, and filtering
+- Responsive Bootstrap UI
+- Read-only REST API (Django REST Framework)
+- PostgreSQL-backed production deployment
+- Automated tests for booking and filtering logic
 
 ## Tech Stack
 
 - Python, Django
-- PostgreSQL (production), SQLite (local development)
+- PostgreSQL (Neon)
+- SQLite (local fallback for development)
 - Bootstrap
 - Django Templates
 - Django REST Framework (read-only API for trips)
@@ -28,7 +46,14 @@ Full-stack Django web application for browsing and booking trips with availabili
 ![Trips](screenshots/trips.png)
 ![Details](screenshots/details.png)
 
-## Run locally
+## API
+
+Example endpoints:
+- GET /api/trips/
+- GET /api/trips/{id}/
+
+## Run Locally
+
 ```bash
 git clone https://github.com/piotrgolebiewski07/travel_agency.git
 cd travel_agency
@@ -37,31 +62,38 @@ python -m venv .venv
 .venv\Scripts\activate  # Windows
 
 pip install -r requirements.txt
+
+# Create .env file and configure DATABASE_URL
+
 python manage.py migrate
 python seed_data.py
 python manage.py runserver
 ```
-## Open in browser
-
-http://127.0.0.1:8000/
 
 ## Seed data
-The project includes a seed script (seed_data.py) which populates the database with sample trips and reviews.
-
-This ensures the application has realistic demo content after setup or deployment.
+The project includes `seed_data.py`, which populates the database with sample trips and reviews for local development and demo deployments.
 
 ---
 
-## Deployment (Render)
-Start Command:
-```bash
-python manage.py migrate && python seed_data.py && python manage.py collectstatic --noinput && gunicorn config.wsgi
-```
+## Deployment
+
+### Production:
+- Alwaysdata (Python WSGI hosting)
+- Neon PostgreSQL
+
+### Source code:
+- GitHub
+
+### Alternative Deployment:
+- Render + Neon PostgreSQL
+  
 Environment variables:
+
 ```env
 SECRET_KEY=your_secret_key
 DEBUG=False
-ALLOWED_HOSTS=your-domain.onrender.com
+ALLOWED_HOSTS=your-domain.com
+DATABASE_URL=postgresql://user:password@host/database
 ```
 ---
 ## Tests
@@ -69,16 +101,10 @@ Basic test coverage for booking logic and filtering is included.
 ```bash
 python manage.py test
 ```
-## 🌍 Demo
-https://travel-agency-u5y1.onrender.com/
+  
+## Architecture
 
-## Demo account
-Use this account to test reviews.
-
-> ⚠️ The app may take a few seconds to start on first visit (Render free tier).
-
-Login: demo  
-Password: demo123
+GitHub → Alwaysdata (Django) → Neon PostgreSQL
 
 ## Key Concepts
 
@@ -86,4 +112,4 @@ Password: demo123
 - Overbooking protection logic
 - Server-side rendering with Django templates
 - REST API with Django REST Framework
-- Deployment on Render with environment configuration
+- Production deployment using Alwaysdata, Render and Neon PostgreSQL
