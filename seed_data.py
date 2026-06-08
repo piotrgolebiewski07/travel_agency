@@ -87,8 +87,8 @@ def run():
                     and take part in optional activities such as wine tasting or a scenic cruise on the Aegean Sea.
                     
                     This short escape is perfect for couples and small groups.""",
-        date(2026, 7, 1),
-        date(2026, 7, 8),
+        date(2027, 7, 1),
+        date(2027, 7, 8),
         "Greece",
         "Santorini",
         600,
@@ -175,8 +175,8 @@ def run():
                     is one of the most spectacular natural sites in Europe.
                     
                     It is a paradise for nature lovers, offering kayaking, hiking, and breathtaking views.""",
-        date(2026, 8, 1),
-        date(2026, 8, 4),
+        date(2027, 8, 1),
+        date(2027, 8, 4),
         "France",
         "Verdon",
         200,
@@ -247,8 +247,8 @@ def run():
                     
                     From volcanic landscapes to golden dunes and ocean views,
                     each island offers something unique.""",
-        date(2026, 7, 25),
-        date(2026, 7, 31),
+        date(2027, 7, 25),
+        date(2027, 7, 31),
         "Spain",
         "Canary Islands",
         600,
@@ -277,8 +277,8 @@ def run():
                     - Gibralfaro Castle
                     - Picasso Museum
                     - La Malagueta Beach""",
-        date(2026, 6, 3),
-        date(2026, 6, 10),
+        date(2027, 6, 3),
+        date(2027, 6, 10),
         "Spain",
         "Malaga",
         450,
@@ -335,8 +335,8 @@ def run():
                     - mountain railways and panoramic views
                 
                     Perfect for active holidays and unforgettable landscapes.""",
-        date(2026, 6, 10),
-        date(2026, 6, 17),
+        date(2027, 6, 10),
+        date(2027, 6, 17),
         "Switzerland",
         "Alps",
         800,
@@ -384,8 +384,8 @@ def run():
                     - coastal hiking trails
                 
                     A perfect destination for nature lovers and peaceful escapes.""",
-        date(2026, 7, 15),
-        date(2026, 7, 20),
+        date(2027, 7, 15),
+        date(2027, 7, 20),
         "United Kingdom",
         "Dorset",
         420,
