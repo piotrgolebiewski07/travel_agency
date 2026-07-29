@@ -4,16 +4,12 @@ Full-stack travel booking application built with Django and PostgreSQL.
 
 ## Live demo
 
-**Primary:**
-https://pgolebiewski07.alwaysdata.net
-
-**Backup:**
-https://travel-agency-u5y1.onrender.com/
+[Travel agency](https://travel-agency-1-c7p6.onrender.com/)
 
 ## Demo account
 Use this account to test reviews.
 
-> ⚠️ The backup Render deployment may take up to 1 minute to start after inactivity.
+> ⚠️ The Render deployment may take up to 1 minute to start after inactivity.
 
 Login: demo  
 Password: demo123
@@ -49,6 +45,7 @@ Password: demo123
 ## API
 
 Example endpoints:
+
 - GET /api/trips/
 - GET /api/trips/{id}/
 
@@ -71,22 +68,16 @@ python manage.py runserver
 ```
 
 ## Seed data
-The project includes `seed_data.py`, which populates the database with sample trips and reviews for local development and demo deployments.
+The project includes `seed_data.py`, which populates the database with sample trips and reviews.
 
 ---
 
 ## Deployment
 
-### Production:
-- Alwaysdata (Python WSGI hosting)
-- Neon PostgreSQL
+- Application: Render
+- Database: Neon PostgreSQL
+- Source code: GitHub
 
-### Source code:
-- GitHub
-
-### Alternative Deployment:
-- Render + Neon PostgreSQL
-  
 Environment variables:
 
 ```env
@@ -95,16 +86,18 @@ DEBUG=False
 ALLOWED_HOSTS=your-domain.com
 DATABASE_URL=postgresql://user:password@host/database
 ```
----
+
 ## Tests
+
 Basic test coverage for booking logic and filtering is included.
+
 ```bash
 python manage.py test
 ```
   
 ## Architecture
 
-GitHub → Alwaysdata (Django) → Neon PostgreSQL
+GitHub → Render (Django) → Neon PostgreSQL
 
 ## Key Concepts
 
@@ -112,4 +105,4 @@ GitHub → Alwaysdata (Django) → Neon PostgreSQL
 - Overbooking protection logic
 - Server-side rendering with Django templates
 - REST API with Django REST Framework
-- Production deployment using Alwaysdata, Render and Neon PostgreSQL
+- Production deployment using Render and Neon PostgreSQL
